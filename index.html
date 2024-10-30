@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <!-- <link rel="stylesheet" href="../resources/css/header.css"> -->
+        <script src="https://kit.fontawesome.com/0d4c0ee316.js" crossorigin="anonymous"></script>
+        <link rel="icon" href="/resources/icons/fav.ico" type="image/x-icon">
+        <link rel="stylesheet" href="/css/header.css">
+        <link rel="stylesheet" href="/css/estiloFooter.css">
+    </head>
+    <body id="body">
+        <nav class="nav-container">
+            <div id="logoImg">
+                <img src="../resources/icons/logoMAMBA.png" alt="logo de la marca" width="60px" style="float: left; margin-right: 10px;">
+                <h1 id="textLogo" style="float: left; margin-right: 10px;">MAMBA Sneakers</h1>
+            </div>
+            <!-- LINES -->
+            <div class="hamburger">
+                <!-- <i class="fa-solid fa-bars"></i> -->
+                <span class="lines"></span>
+                <span class="lines"></span>
+                <span class="lines"></span>
+            </div>
+            
+            <ul id="nav-links">
+                <li class="navL"><a href="homee.php" class="links">Inicio</a></li>
+                <li class="navL"><a href="shop.php" class="links">Cliente</a></li>
+                <li class="navL"><a href="about.php" class="links">Proveedor</a></li>
+                <li class="navL"><a href="help.php" class="links">Producto</a></li>
+                <li class="navL-2">
+                    <div onclick="abrirModal();" class="links">
+                        <div class="carrito">
+                            <img id="bagShop" src="../resources/icons/bagShop.ico" width="25px" style="float: left; margin-right: 10px; cursor: pointer; padding-bottom: 50%;" />
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <main>
+            <div class="container"></div>
+        </main>
+        
+        <footer>
+            <table class="footer-table">
+                <tr>
+                    <td colspan="4" class="footer-icons">
+                        <button class="language-button">Mexico | Español | $MX</button>
+                        <a href="https://twitter.com/mambasneakers0" target="_blank" style="color: white; text-decoration: none;">
+                            <i class="fab fa-x-twitter"></i>
+                        </a>
+                        <a href="https://www.facebook.com/" target="_blank" style="color: white; text-decoration: none;">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="https://instagram.com/mamba.sneakers23?igshid=MTNiYzNiMzkwZA==" target="_blank" style="color: white; text-decoration: none;">
+                           <i class="fab fa-instagram"></i> 
+                        </a>
+                        <a href="https://www.youtube.com/" target="_blank" style="color: white; text-decoration: none;">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </td>
+                    <td colspan="4" class="footer-text">
+                        <p>
+                            <br>
+                            <span>Ayuda</span>&nbsp;&nbsp;<span>Cómo funciona</span>&nbsp;&nbsp;<span>Privacidad</span>&nbsp;&nbsp;<span>Condiciones</span>&nbsp;&nbsp;<span>Trabajos</span><br><br>
+                            <span>Contáctanos</span>&nbsp;&nbsp;<span>Sugerencia de producto</span>&nbsp;&nbsp;<span>Prensa</span><br><br>
+                            <span>Declaración sobre accesibilidad</span>&nbsp;&nbsp;<span>Tus opciones de privacidad</span><br><br>
+                            <span>©2023 MAMBA sneakers. Todos los derechos reservados.</span>
+                        </p>                    
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="languages">
+                        <p>
+                            <span>English (US)</span>&nbsp;&nbsp;&nbsp;         
+                            <span>English (UK)</span>&nbsp;&nbsp;&nbsp;
+                            <span>Italiano</span>&nbsp;&nbsp;&nbsp;
+                            <span>Deutsch</span>&nbsp;&nbsp;&nbsp;
+                            <span>Français (FR)</span>&nbsp;&nbsp;
+                            <span>简体中文</span>&nbsp;&nbsp;&nbsp;
+                            <span>繁體中文</span>&nbsp;&nbsp;&nbsp;
+                            <span>日本語</span>&nbsp;&nbsp;&nbsp;
+                            <span>한국어</span>&nbsp;&nbsp;&nbsp;
+                            <span>Español (MX)</span>&nbsp;&nbsp;&nbsp;
+                            <span>Español (US)</span>&nbsp;&nbsp;&nbsp;
+                            <span>Español (ES)</span>&nbsp;&nbsp;&nbsp;
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </footer>
+        <div style="width: 100%; height: 20px; justify-content: center; align-items: center; color: black; background-color: red; font-size: 12px; font-family: Verdana, Geneva, Tahoma, sans-serif; font-weight: bold;"><center><p>ESTA PÁGINA ES UN PROYECTO UNIVERSITARIO</p></center></div>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script src="/js/header.js"></script>
+        
+    </body>
+</html>
+
