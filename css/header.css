@@ -181,7 +181,12 @@ main {
     flex: 1; /* Toma el espacio restante */
     padding: 1rem;
 }
-.container {
+.containerM {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+#content {
     display: flex;
     flex-direction: column;
     min-height: 100vh; /* Ocupa toda la altura de la ventana */

@@ -7,14 +7,14 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <!-- <link rel="stylesheet" href="../resources/css/header.css"> -->
         <script src="https://kit.fontawesome.com/0d4c0ee316.js" crossorigin="anonymous"></script>
-        <link rel="icon" href="/resources/icons/fav.ico" type="image/x-icon">
-        <link rel="stylesheet" href="/css/header.css">
-        <link rel="stylesheet" href="/css/estiloFooter.css">
+        <link rel="icon" href="./resources/icons/fav.ico" type="image/x-icon">
+        <link rel="stylesheet" href="./css/header.css">
+        <link rel="stylesheet" href="./css/estiloFooter.css">
     </head>
     <body id="body">
         <nav class="nav-container">
             <div id="logoImg">
-                <img src="../resources/icons/logoMAMBA.png" alt="logo de la marca" width="60px" style="float: left; margin-right: 10px;">
+                <img src="./resources/icons/logoMAMBA.png" alt="logo de la marca" width="60px" style="float: left; margin-right: 10px;">
                 <h1 id="textLogo" style="float: left; margin-right: 10px;">MAMBA Sneakers</h1>
             </div>
             <!-- LINES -->
@@ -26,22 +26,22 @@
             </div>
             
             <ul id="nav-links">
-                <li class="navL"><a href="homee.php" class="links">Inicio</a></li>
-                <li class="navL"><a href="shop.php" class="links">Cliente</a></li>
-                <li class="navL"><a href="about.php" class="links">Proveedor</a></li>
-                <li class="navL"><a href="help.php" class="links">Producto</a></li>
+                <li class="navL"><a href="#" class="links" onclick="loadPage('inicio')">Inicio</a></li>
+                <li class="navL"><a href="#" class="links" onclick="loadPage('cliente')">Cliente</a></li>
+                <li class="navL"><a href="#" class="links" onclick="loadPage('proveedor')">Proveedor</a></li>
+                <li class="navL"><a href="#" class="links" onclick="loadPage('producto')">Producto</a></li>
                 <li class="navL-2">
-                    <div onclick="abrirModal();" class="links">
+                    <div class="links">
                         <div class="carrito">
-                            <img id="bagShop" src="../resources/icons/bagShop.ico" width="25px" style="float: left; margin-right: 10px; cursor: pointer; padding-bottom: 50%;" />
+                            <img id="bagShop" src="./resources/icons/bagShop.ico" width="25px" style="float: left; margin-right: 10px; cursor: pointer; padding-bottom: 50%;" />
                         </div>
                     </div>
                 </li>
             </ul>
         </nav>
 
-        <main>
-            <div class="container"></div>
+        <main class="containerM">
+            <div id="content"></div>
         </main>
         
         <footer>
@@ -68,7 +68,7 @@
                             <span>Ayuda</span>&nbsp;&nbsp;<span>Cómo funciona</span>&nbsp;&nbsp;<span>Privacidad</span>&nbsp;&nbsp;<span>Condiciones</span>&nbsp;&nbsp;<span>Trabajos</span><br><br>
                             <span>Contáctanos</span>&nbsp;&nbsp;<span>Sugerencia de producto</span>&nbsp;&nbsp;<span>Prensa</span><br><br>
                             <span>Declaración sobre accesibilidad</span>&nbsp;&nbsp;<span>Tus opciones de privacidad</span><br><br>
-                            <span>©2023 MAMBA sneakers. Todos los derechos reservados.</span>
+                            <span>©2024 MAMBA sneakers. Todos los derechos reservados.</span>
                         </p>                    
                     </td>
                 </tr>
@@ -97,8 +97,35 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-        <script src="/js/header.js"></script>
+        <script src="./js/header.js"></script>
         
+        <script>
+            // Función para cargar el contenido de una página en el contenedor #content
+            function loadPage(page) {
+                const contentDiv = document.getElementById('content');
+
+                // Usa fetch para cargar el contenido del archivo HTML
+                fetch(`pages/${page}.html`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error("Error al cargar la página");
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        // Inserta el contenido en el div #content
+                        contentDiv.innerHTML = data;
+                    })
+                    .catch(error => {
+                        contentDiv.innerHTML = "<p>Error al cargar la página.</p>";
+                        console.error(error);
+                    });
+            }
+
+            // Cargar la página inicial al iniciar
+            loadPage('inicio');
+
+        </script>
     </body>
 </html>
 
