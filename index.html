@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/home.css">
         <!-- <link rel="stylesheet" href="../resources/css/header.css"> -->
         <script src="https://kit.fontawesome.com/0d4c0ee316.js" crossorigin="anonymous"></script>
         <link rel="icon" href="./resources/icons/fav.ico" type="image/x-icon">
@@ -103,7 +104,9 @@
             // Función para cargar el contenido de una página en el contenedor #content
             function loadPage(page) {
                 const contentDiv = document.getElementById('content');
-
+                console.log('Loading page:', page); 
+                
+                contentDiv.innerHTML = '<div>Loading...</div>';
                 // Usa fetch para cargar el contenido del archivo HTML
                 fetch(`pages/${page}.html`)
                     .then(response => {
@@ -113,8 +116,18 @@
                         return response.text();
                     })
                     .then(data => {
+                        console.log('Content loaded, length:', data.length);
                         // Inserta el contenido en el div #content
                         contentDiv.innerHTML = data;
+
+// Execute any scripts that were part of the loaded content
+                        const scripts = contentDiv.querySelectorAll('script');
+                        scripts.forEach(script => {
+                            const newScript = document.createElement('script');
+                            newScript.src = script.src; // for external scripts
+                            newScript.innerHTML = script.innerHTML; // for inline scripts
+                            document.body.appendChild(newScript);
+                        });
                     })
                     .catch(error => {
                         contentDiv.innerHTML = "<p>Error al cargar la página.</p>";
@@ -123,7 +136,10 @@
             }
 
             // Cargar la página inicial al iniciar
-            loadPage('inicio');
+            document.addEventListener('DOMContentLoaded', function() {
+    loadPage('inicio');
+    console.log('DOM fully loaded');
+});
 
         </script>
     </body>
