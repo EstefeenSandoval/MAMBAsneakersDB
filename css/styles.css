@@ -7,36 +7,30 @@
     background-color: #f0f2f5;
 }
 
-#three-cards {
+#three-cards, #two-cards {
     display: flex;
     flex-direction: row;
     gap: 15px;
 }
 
-.card-info {
-    width: 550px;
-    height: 350px;
+.card-info, .card-info-2 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 550px; /* Ajusta según tus necesidades para .card-info */
+    height: 350px; /* Ajusta según tus necesidades para .card-info */
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
-}
-
-#two-cards {
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
+    text-align: center;
 }
 
 .card-info-2 {
     width: 834px;
     height: 300px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
 }
-
 
 .styled-list {
     list-style-type: none;

@@ -47,51 +47,8 @@
     <div style="height: 150px; width: 100%;"></div>
     <div class="container" id="cont">
         <h1 class="text-center">Catalog</h1>
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                console.log('DOM fully loaded');
-                const images =30;
-                const cont = document.getElementById('cont');
-                for (let i = 0; i <= images/3; i++) {
-                    const row = document.createElement('div');
-                    row.className = 'row row-cols-3 g-4';
-                    for (let j = 0; j < 3; j++) {
-                        
-                        const divB = document.createElement('div');
-                        divB.className = 'card';
-                        row.appendChild(divB);
-
-                        const img = document.createElement('img');
-                        img.src = '../pages/au.png';
-                        img.className = 'img-thumbnail';
-                        divB.appendChild(img);
-
-                        const divC = document.createElement('div');
-                        divC.className = 'card-body textDesc';
-                        divB.appendChild(divC);
-
-                        const p = document.createElement('p');
-                        p.className = 'shoe-name';
-                        p.style.fontFamily='Arial';
-                        p.textContent = 'Name of the shoe example';
-                        divC.appendChild(p);
-
-                        const p2 = document.createElement('p');
-                        p2.className = 'shoe-desc';
-                        p2.textContent = 'Fairly long description of the shoe example';
-                        divC.appendChild(p2);
-
-                        const p3 = document.createElement('p');
-                        p3.className = 'shoe-price';
-                        p3.textContent = '$100';
-                        divC.appendChild(p3);
-                    }
-                    cont.appendChild(row);
-            }});  
-            
-
-        </script>
     </div>
+    
     <div style="height: 100px; width: 100%;"></div>
     <footer>
         <table class="footer-table">
@@ -145,5 +102,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="../js/inicio.js"></script>
+    <script src="../js/header.js"></script>
 </body>
 </html>

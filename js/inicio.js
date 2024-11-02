@@ -1,40 +1,43 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM fully loaded for catalog page');
-    const images = 30;
+    console.log('DOM fully loaded');
+    const images = 32;
     const cont = document.getElementById('cont');
-    for (let i = 0; i <= images / 3; i++) {
-        const row = document.createElement('div');
-        row.className = 'row row-cols-3 g-4';
-        for (let j = 0; j < 3; j++) {
-            const divB = document.createElement('div');
-            divB.className = 'card';
-            row.appendChild(divB);
 
-            const img = document.createElement('img');
-            img.src = 'pages/au.png';
-            img.className = 'img-thumbnail';
-            divB.appendChild(img);
+    const row = document.createElement('div');
+    row.className = 'row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4'; // Responsividad
+    cont.appendChild(row);
 
-            const divC = document.createElement('div');
-            divC.className = 'card-body textDesc';
-            divB.appendChild(divC);
+    for (let i = 0; i < images; i++) {
+        const divB = document.createElement('div');
+        divB.className = 'col';
+        const card = document.createElement('div');
+        card.className = 'card h-100';
+        divB.appendChild(card);
 
-            const p = document.createElement('p');
-            p.className = 'shoe-name';
-            p.style.fontFamily = 'Arial';
-            p.textContent = 'Name of the shoe example';
-            divC.appendChild(p);
+        const img = document.createElement('img');
+        img.src = '../pages/au.png';
+        img.className = 'card-img-top img-thumbnail';
+        card.appendChild(img);
 
-            const p2 = document.createElement('p');
-            p2.className = 'shoe-desc';
-            p2.textContent = 'Fairly long description of the shoe example';
-            divC.appendChild(p2);
+        const divC = document.createElement('div');
+        divC.className = 'card-body text-center';
+        card.appendChild(divC);
 
-            const p3 = document.createElement('p');
-            p3.className = 'shoe-price';
-            p3.textContent = '$100';
-            divC.appendChild(p3);
-        }
-        cont.appendChild(row);
+        const p = document.createElement('p');
+        p.className = 'shoe-name';
+        p.textContent = 'Name of the shoe example';
+        divC.appendChild(p);
+
+        const p2 = document.createElement('p');
+        p2.className = 'shoe-desc';
+        p2.textContent = 'Fairly long description of the shoe example';
+        divC.appendChild(p2);
+
+        const p3 = document.createElement('p');
+        p3.className = 'shoe-price';
+        p3.textContent = '$100';
+        divC.appendChild(p3);
+
+        row.appendChild(divB);
     }
 });
