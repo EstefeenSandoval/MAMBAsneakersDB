@@ -3,12 +3,12 @@ const app = express();
 const port = 3000;
 app.use(express.json());
 
-//DB Connection
-
-
-
 //Routes
+const clientRoutes = require('./routes/client.routes');
+const productRoutes = require('./routes/product.routes');
+const providerRoutes = require('./routes/provider.routes');
 
+// Middlewares
 const cors = require('cors');
 app.use(cors());
 
