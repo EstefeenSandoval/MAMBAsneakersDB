@@ -1,23 +1,34 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
+.card {
+    border: none; /* Elimina el borde predeterminado */
+    border-radius: 10px; /* Bordes redondeados */
+    transition: transform 0.2s; /* Transición para el efecto hover */
 }
 
-.row{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+.card:hover {
+    transform: translateY(-5px); /* Eleva la card al pasar el mouse */
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); /* Sombra más intensa */
 }
 
-.card{
-    width: 18rem;
+.img-thumbnail {
+    border-radius: 10px; /* Bordes redondeados para la imagen */
 }
 
-.textDesc, .shoe-name, .shoe-desc{
-    font-family: Arial !important;
+.card-body {
+    padding: 15px; /* Espacio interno del contenido */
+}
+
+.shoe-name {
+    font-size: 1.25rem; /* Aumentar el tamaño del texto */
+    font-weight: bold; /* Negrita */
+}
+
+.shoe-desc {
+    color: #555; /* Color gris para la descripción */
+    margin-top: 10px; /* Espaciado superior */
+}
+
+.shoe-price {
+    font-size: 1.1rem; /* Tamaño de texto del precio */
+    color: #4CAF50; /* Color verde para el precio */
+    margin-top: 10px; /* Espaciado superior */
 }

@@ -7,6 +7,8 @@
     <title>Mamba</title>
     
     <link rel="stylesheet" href="../css/home.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- <link rel="stylesheet" href="../resources/css/header.css"> -->
     <script src="https://kit.fontawesome.com/0d4c0ee316.js" crossorigin="anonymous"></script>
     <link rel="icon" href="../resources/icons/fav.ico" type="image/x-icon">
@@ -44,15 +46,38 @@
             </li>
         </ul>
     </nav>
-    <div style="height: 150px; width: 100%;"></div>
+    <div style="height: 150px; width: 100%;background-color: #f0f2f5;"></div>
 
-
-    <div class="container" id="cont">
-        
+    <div style="display: flex; width: 100%; justify-content: center; background-color: #f0f2f5; "><h2 style="margin: 0px; padding: 0px; color: rgba(255, 128, 0, 0.8);">Proveedor</h2></div>
+    <div class="mainContainer">
+        <div id="three-cards">
+            <div class="card-info">
+                <h2>Tendencia de Ventas Mensuales</h2>
+                <canvas id="myLineChart" width="400" height="200"></canvas>
+            </div>
+            <div class="card-info">
+                <canvas id="myPieChart" width="400" height="400"></canvas>
+            </div>
+            <div class="card-info">
+                <ul class="styled-list">
+                    <li>Paso 1: Preparar los ingredientes</li>
+                    <li>Paso 2: Mezclar los ingredientes</li>
+                    <li>Paso 3: Precalentar el horno</li>
+                </ul>
+            </div>
+        </div>
+        <div id="two-cards">
+            <div class="card-info-2">
+                <canvas id="myScatterChart" width="400" height="200"></canvas>
+            </div>
+            <div class="card-info-2">
+                <canvas id="myChart" width="400" height="200"></canvas>
+            </div>
+        </div>
     </div>
 
 
-    <div style="height: 100px; width: 100%;"></div>
+    <div style="height: 100px; width: 100%;background-color: #f0f2f5;"></div>
     <footer>
         <table class="footer-table">
             <tr>
@@ -105,5 +130,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="../js/proveedor.js"></script>
+    <script src="../js/header.js"></script>
 </body>
 </html>
