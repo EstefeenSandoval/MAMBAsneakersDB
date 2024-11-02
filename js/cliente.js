@@ -1,5 +1,12 @@
+
+
+
+
+
 // Obtener el contexto del canvas
 const ctx = document.getElementById('myChart').getContext('2d');
+
+
 
 // Crear la gráfica
 const myChart = new Chart(ctx, {

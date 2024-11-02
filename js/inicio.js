@@ -1,8 +1,28 @@
+
+let answer ="";
+
+
 document.addEventListener('DOMContentLoaded', function() {
+
+    fetch('http://localhost:3000/')
+    .then(response => {
+        if (!response.ok) 
+            throw new Error('Error at inicio.js request');
+        return response.json();
+    })
+    .then(data => {
+        console.log(data.message+", data.message"); 
+        answer = data.message;
+        show(answer);
+    })
+    .catch(error => console.error('Fetch error:', error));
+
     console.log('DOM fully loaded');
     const images = 32;
-    const cont = document.getElementById('cont');
 
+   
+    
+    const cont = document.getElementById('cont');
     const row = document.createElement('div');
     row.className = 'row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4'; // Responsividad
     cont.appendChild(row);
@@ -40,4 +60,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         row.appendChild(divB);
     }
+
+    
 });
+
+function show(){
+    const example = document.getElementById('ex');
+    const p = document.createElement('p');
+    p.textContent = answer;
+    console.log(answer);
+    example.appendChild(p);
+}
