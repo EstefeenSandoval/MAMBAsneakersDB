@@ -11,8 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return response.json();
     })
     .then(data => {
-        console.log(data.message+", data.message"); 
-        answer = data.message;
+        console.log("Succesful connection to server");
+        //data.result[rowNumber].column
+        console.log(data.result[0].result); 
+        answer = data.result[0].result;
         show(answer);
     })
     .catch(error => console.error('Fetch error:', error));
