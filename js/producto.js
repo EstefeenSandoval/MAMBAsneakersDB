@@ -74,53 +74,82 @@ async function queryTwo() {
     }
 }
 
+async function queryThree() {
+    try {
+        const response = await fetch('http://localhost:3000/products/getLowExcistence');
+        if (response.ok) {
+            // Convertimos la respuesta a JSON
+            const data = await response.json();
+            console.log('Datos recibidos:', data);
+
+            let nameProduct = [];
+            let existence = [];
+            data.map((product) => {
+                nameProduct.push(product.Producto);
+                existence.push(product.Existencias);
+            });
+
+            const ctx3 = document.getElementById('myPieChart').getContext('2d');
+
+            // Definir los colores según los rangos de valores
+            const getColor = (value) => {
+                if (value < 6) {
+                    return 'rgba(255, 99, 132, 0.6)'; // Rojo para valores bajos
+                } else if (value >= 6 && value < 8) {
+                    return 'rgba(255, 206, 86, 0.6)'; // Amarillo para valores medios
+                } else {
+                    return 'rgba(75, 192, 192, 0.6)'; // Verde para valores altos
+                }
+            };
+
+            // Asignar colores basados en los datos
+            const backgroundColors = existence.map(getColor);
+
+            // Crear gráfica de pastel
+            const myPieChart = new Chart(ctx3, {
+                type: 'pie',
+                data: {
+                    labels: nameProduct,
+                    datasets: [{
+                        label: 'Existencias',
+                        data: existence,
+                        backgroundColor: backgroundColors, // Colores dinámicos
+                        borderColor: backgroundColors.map(color => color.replace('0.6', '1')), // Bordes más opacos
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right', // Muestra la leyenda a la derecha
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    return `${tooltipItem.label}: ${tooltipItem.raw} existencias`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } else {
+            console.log('Error: respuesta no ok');
+        }
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+    }
+}
+
+
 
 
 
 queryOne();
 queryTwo();
+queryThree();
 
-
-
-
-// Obtener el contexto del canvas
-const ctx2 = document.getElementById('myPieChart').getContext('2d');
-
-// Crear la gráfica de pastel
-const myPieChart = new Chart(ctx2, {
-    type: 'pie', // Tipo de gráfica de pastel
-    data: {
-        labels: ['Producto A', 'Producto B', 'Producto C', 'Producto D'],
-        datasets: [{
-            label: 'Distribución de Ventas',
-            data: [30, 20, 25, 25], // Porcentajes o valores de cada segmento
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.6)',
-                'rgba(54, 162, 235, 0.6)',
-                'rgba(255, 206, 86, 0.6)',
-                'rgba(75, 192, 192, 0.6)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top', // Posición de la leyenda
-            },
-            tooltip: {
-                enabled: true
-            }
-        }
-    }
-});
 const ctx3 = document.getElementById('myLineChart').getContext('2d');
 
 // Crear la gráfica de líneas

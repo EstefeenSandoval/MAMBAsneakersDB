@@ -60,6 +60,25 @@ class Product {
       throw err;
     }
   }
+
+  static async getLowExcistence() { // Top 5 productos más vendidos - Consulta los productos más vendidos según la cantidad total en todas las facturas
+    try {
+      const [rows] = await db.query(`
+        SELECT 
+          Nombre_Prod AS Producto, 
+          Cantidad_Prod AS Existencias
+        FROM 
+            producto
+        ORDER BY 
+            Cantidad_Prod ASC
+        LIMIT 6;
+    `);
+    return rows; 
+    } catch (err) {
+      console.error('Error en la consulta getLowExcistence:', err);
+      throw err;
+    }
+  }
 }
 
 module.exports = Product;
