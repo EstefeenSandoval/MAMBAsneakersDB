@@ -79,6 +79,21 @@ class Product {
       throw err;
     }
   }
+
+  static async getAvgDiscount() { // Top 5 productos más vendidos - Consulta los productos más vendidos según la cantidad total en todas las facturas
+    try {
+      const [rows] = await db.query(`
+        SELECT 
+          AVG(Descuento_Prod) AS DescuentoPromedio
+        FROM 
+            producto;
+    `);
+    return rows; 
+    } catch (err) {
+      console.error('Error en la consulta getAvgDiscount:', err);
+      throw err;
+    }
+  }
 }
 
 module.exports = Product;

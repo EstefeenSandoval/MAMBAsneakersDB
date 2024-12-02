@@ -142,13 +142,29 @@ async function queryThree() {
     }
 }
 
-
+async function queryFour() {
+    try {
+        const response = await fetch('http://localhost:3000/products/getAvgDiscount');
+        if (response.ok) {
+            // Convertimos la respuesta a JSON
+            const data = await response.json();
+            console.log('Datos recibidos:', data);
+            // Mostrar la informacion
+            document.getElementById('avgDiscount').innerHTML = data.map((product, index) => `<li>$${product.DescuentoPromedio}</li>`);
+        } else {
+            console.log('Error: respuesta no ok');
+        }
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+    }
+}
 
 
 
 queryOne();
 queryTwo();
 queryThree();
+queryFour();
 
 const ctx3 = document.getElementById('myLineChart').getContext('2d');
 
