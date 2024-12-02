@@ -94,6 +94,36 @@ class Product {
       throw err;
     }
   }
+
+  static async getBillings() { // Muestra el total facturado por producto, agrupado por cliente y región
+    try {
+      const [rows] = await db.query(`
+        SELECT 
+            p.Nombre_Prod AS Producto, 
+            c.Nombre_Cte AS Cliente, 
+            l.Nombre_Localidad AS Region, 
+            SUM(fp.Cantidad * p.PrecioUnit_Prod) AS TotalFacturado
+        FROM 
+            producto p
+        JOIN 
+            factura_producto fp ON p.ID_Prod = fp.ProductoID
+        JOIN 
+            factura f ON fp.FacturaFolio = f.Folio_Factura
+        JOIN 
+            cliente c ON f.ClienteRFC = c.RFC_Cte
+        JOIN 
+            localidad l ON c.LocalidadID = l.ID_Localidad
+        GROUP BY 
+            p.ID_Prod, c.RFC_Cte, l.ID_Localidad
+        ORDER BY 
+            TotalFacturado DESC;
+    `);
+    return rows; 
+    } catch (err) {
+      console.error('Error en la consulta getBillings:', err);
+      throw err;
+    }
+  }
 }
 
 module.exports = Product;
