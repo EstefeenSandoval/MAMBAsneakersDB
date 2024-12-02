@@ -4,7 +4,7 @@ const port = 3000;
 app.use(express.json());
 const db = require('./conexion'); 
 
-//Routes
+// Rutas
 const clientRoutes = require('./routes/client.routes');
 const productRoutes = require('./routes/product.routes');
 const providerRoutes = require('./routes/provider.routes');
@@ -12,15 +12,20 @@ const providerRoutes = require('./routes/provider.routes');
 // Middlewares
 const cors = require('cors');
 app.use(cors());
-/* 
+
+// Rutas
+app.use('/products', productRoutes); // Todas las rutas en productRoutes estarán bajo /products
+
+// Ruta de prueba (opcional)
 app.get('/', (req, res) => {
-  res.json({message:"Server's answer!"});
+  res.json({ message: "Server's answer!" });
+});
 
-}); */
-
-app.use('/products', productRoutes);
-
-
+// Manejo de errores
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).json({ message: 'Internal Server Error' });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

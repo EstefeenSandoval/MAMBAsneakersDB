@@ -16,4 +16,9 @@ const pool = mysql.createPool({
 
 const promisePool = pool.promise();
 
+// Verificar si la conexión está bien
+promisePool.query('SELECT 1')
+  .then(() => console.log('Conexión a la base de datos exitosa'))
+  .catch(err => console.error('Error al conectar a la base de datos:', err));
+
 module.exports = promisePool;
