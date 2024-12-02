@@ -15,7 +15,7 @@ async function queryOne() {
                         Precio: $${product.Precio}
                       </div>
                       <span class="badge rounded-pill">${product.CantidadVendida}</span>
-                    <img src="../resources/productos/${product.Img}" alt="Imagen ${index + 1}" class="product-image ms-3">
+                    <img src="../resources/productos/sneakers/${product.Img}" alt="Imagen ${index + 1}" class="product-image ms-4">
                     </li>`);
         } else {
             console.log('Error: respuesta no ok');
@@ -170,20 +170,16 @@ async function queryFive() {
             const tableBody = document.querySelector('#facturacionTable tbody');
             tableBody.innerHTML = data.map(row => {
                 const totalFacturado = Number(row.TotalFacturado) || 0; // Convierte a número o asigna 0 si es inválido
-                // Formatear como moneda con comas y puntos
-                const formattedTotal = totalFacturado.toLocaleString('en-US', {
-                    style: 'currency',
-                    currency: 'USD'
-                });
                 return `
                     <tr>
                         <td>${row.Producto}</td>
                         <td>${row.Cliente}</td>
                         <td>${row.Region}</td>
-                        <td>${formattedTotal}</td>
+                        <td>$${totalFacturado.toFixed(2)}</td>
                     </tr>
                 `;
             }).join('');
+
 
             // Preparar datos para gráficos
             const regions = [...new Set(data.map(item => item.Region))];
@@ -233,6 +229,7 @@ async function queryFive() {
         console.error('Error al obtener datos:', error);
     }
 }
+
 
 queryOne();
 queryTwo();

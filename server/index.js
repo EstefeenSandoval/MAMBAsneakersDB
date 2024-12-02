@@ -15,6 +15,7 @@ app.use(cors());
 
 // Rutas
 app.use('/products', productRoutes); // Todas las rutas en productRoutes estarán bajo /products
+app.use('/provider', providerRoutes); // Todas las rutas en providerRoutes estarán bajo /provider
 
 // Ruta de prueba (opcional)
 app.get('/', (req, res) => {
