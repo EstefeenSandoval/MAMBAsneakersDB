@@ -25,7 +25,7 @@ async function queryOne() {
 
 async function queryTwo() {
     try {
-        const response = await fetch('http://localhost:3000/provider/getBilling');
+        const response = await fetch('http://localhost:3000/provider/get');
         if (response.ok) {
             // Convertimos la respuesta a JSON
             const data = await response.json();
@@ -155,7 +155,7 @@ async function queryFour() {
             const data = await response.json();
             console.log('Datos recibidos:', data);
             // Mostrar la informacion
-            document.getElementById('avgDiscount').innerHTML = data.map((product, index) => `<li>$${product.DescuentoPromedio}</li>`);
+            document.getElementById('avgDiscount').innerHTML = data.map((product, index) => `<p>${product.Proveedor}</p><li>$${product.DescuentoPromedio}</li>`);
         } else {
             console.log('Error: respuesta no ok');
         }
@@ -184,49 +184,6 @@ async function queryFive() {
                     </tr>
                 `;
             }).join('');
-
-
-            // Preparar datos para gráficos
-            const regions = [...new Set(data.map(item => item.Region))];
-            const totalByRegion = regions.map(region => {
-                return data
-                    .filter(item => item.Region === region)
-                    .reduce((sum, item) => sum + item.TotalFacturado, 0);
-            });
-
-            // Crear gráfico de pastel
-            const ctx = document.getElementById('regionChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: regions,
-                    datasets: [{
-                        label: 'Facturación por Región',
-                        data: totalByRegion,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.6)',
-                            'rgba(54, 162, 235, 0.6)',
-                            'rgba(255, 206, 86, 0.6)',
-                            'rgba(75, 192, 192, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                        },
-                    }
-                }
-            });
         } else {
             console.error('Error en la respuesta del servidor.');
         }
@@ -237,6 +194,7 @@ async function queryFive() {
 
 
 queryOne();
+//queryTwo();
 queryThree();
 queryFour();
 queryFive();

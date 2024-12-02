@@ -57,5 +57,17 @@ router.get('/getBilling', async (req, res) => {
     }
 });
 
+  // Ruta para obtener 
+  router.get('/get', async (req, res) => {
+    try {
+      const providers = await Provider.getLowExcistence(); // Usamos el método getAll para obtener los proveedores
+      res.json(providers); // Respondemos con los proveedores en formato JSON
+    } catch (error) {
+      console.error('Error al obtener proveedores:', error);
+      res.status(500).json({ success: false, error: 'Error al obtener proveedores' });
+    }
+});
+
+
 
 module.exports = router;

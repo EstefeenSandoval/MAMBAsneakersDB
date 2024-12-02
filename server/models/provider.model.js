@@ -121,6 +121,17 @@ class Provider {
     }
   }
 
+  static async get() { // Top 5 proveedores
+    try {
+      const [rows] = await db.query(`
+        
+    `);
+    return rows; 
+    } catch (err) {
+      console.error('Error en la consulta getDiscount:', err);
+      throw err;
+    }
+  }
 }
 
 module.exports = Provider;
