@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 03-11-2024 a las 00:26:22
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Tiempo de generación: 02-12-2024 a las 23:14:28
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,6 +20,80 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `mambadb`
 --
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `TopMoreProductsSupplied` ()   BEGIN
+    SELECT 
+        pr.Nombre_Prov AS Proveedor, 
+        COUNT(DISTINCT fp.ProductoID) AS ProductosSuministrados
+    FROM 
+        proveedor pr
+    JOIN 
+        factura f ON pr.ID_Prov = f.ProveedorID
+    JOIN 
+        factura_producto fp ON f.Folio_Factura = fp.FacturaFolio
+    GROUP BY 
+        pr.ID_Prov
+    ORDER BY 
+        ProductosSuministrados DESC
+    LIMIT 3;  
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `TopSellingProducts` ()   BEGIN
+    -- Declare variables to store data for each row
+    DECLARE v_ID_Prod INT;
+    DECLARE v_Nombre_Prod VARCHAR(255);
+    DECLARE v_Cantidad INT;
+    DECLARE v_Finished INT DEFAULT 0;
+
+    -- Declare a cursor to loop through the sold products
+    DECLARE product_cursor CURSOR FOR
+        SELECT p.ID_Prod, p.Nombre_Prod, SUM(fp.Cantidad)
+        FROM Factura_Producto fp
+        INNER JOIN Producto p ON fp.ProductoID = p.ID_Prod
+        GROUP BY p.ID_Prod, p.Nombre_Prod;
+        
+    -- Declare the handler to close the cursor when finished
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_Finished = 1;
+    
+    -- Create a temporary table to store the results
+    CREATE TEMPORARY TABLE TopSellingProducts (
+        ID_Prod INT,
+        Product_Name VARCHAR(255),
+        Total_Sold INT
+    );
+
+    -- Open the cursor
+    OPEN product_cursor;
+    
+    -- Loop to fetch the results from the cursor
+    read_loop: LOOP
+        FETCH product_cursor INTO v_ID_Prod, v_Nombre_Prod, v_Cantidad;
+        
+        IF v_Finished = 1 THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- Insert the fetched data into the temporary table
+        INSERT INTO TopSellingProducts (ID_Prod, Product_Name, Total_Sold)
+        VALUES (v_ID_Prod, v_Nombre_Prod, v_Cantidad);
+    END LOOP;
+
+    -- Close the cursor
+    CLOSE product_cursor;
+
+    -- Display the top selling products report
+    SELECT * FROM TopSellingProducts ORDER BY Total_Sold DESC;
+
+    -- Drop the temporary table
+    DROP TEMPORARY TABLE TopSellingProducts;
+
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
