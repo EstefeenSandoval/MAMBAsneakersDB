@@ -33,7 +33,30 @@ class Product {
     `);
     return rows; 
     } catch (err) {
-      console.error('Error en la consulta getAll:', err);
+      console.error('Error en la consulta getTopThreeBestSellers:', err);
+      throw err;
+    }
+  }
+
+  static async getTopIncomesPerProduct() { // Top 5 productos más vendidos - Consulta los productos más vendidos según la cantidad total en todas las facturas
+    try {
+      const [rows] = await db.query(`
+        SELECT 
+          p.Nombre_Prod AS Producto, 
+          SUM(fp.Cantidad * p.PrecioUnit_Prod) AS IngresosTotales
+        FROM 
+          producto p
+        JOIN 
+          factura_producto fp ON p.ID_Prod = fp.ProductoID
+        GROUP BY 
+          p.ID_Prod
+        ORDER BY 
+          IngresosTotales DESC
+        LIMIT 5;
+    `);
+    return rows; 
+    } catch (err) {
+      console.error('Error en la consulta getTopIncomesPerProduct:', err);
       throw err;
     }
   }

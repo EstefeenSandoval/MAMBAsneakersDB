@@ -1,6 +1,6 @@
 // CONSULTAS
 
-async function testConnection() {
+async function queryOne() {
     try {
         const response = await fetch('http://localhost:3000/products/topThreeBestSellers');
         if (response.ok) {
@@ -24,35 +24,65 @@ async function testConnection() {
         console.error('Error en la solicitud:', error);
     }
 }
-testConnection();
+
+async function queryTwo() {
+    try {
+        const response = await fetch('http://localhost:3000/products/getTopIncomesPerProduct');
+        if (response.ok) {
+            // Convertimos la respuesta a JSON
+            const data = await response.json();
+            console.log('Datos recibidos:', data);
+            let nameProduct = [];
+            let totalIncome = [];
+            data.map((product) => {
+                nameProduct.push(product.Producto);
+                totalIncome.push(product.IngresosTotales);
+            });
+            // Mostrar la informacion
+            // Obtener el contexto del canvas
+            const ctx = document.getElementById('myChart').getContext('2d');
+            // Crear la gráfica
+            const myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: nameProduct,
+                    datasets: [{
+                        label: 'Ingresos',
+                        data: totalIncome,
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    indexAxis: 'y',
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
 
 
-
-// Obtener el contexto del canvas
-const ctx = document.getElementById('myChart').getContext('2d');
-
-// Crear la gráfica
-const myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
-        datasets: [{
-            label: 'Ventas 2024',
-            data: [120, 190, 300, 500, 200, 300],
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true
-            }
+        } else {
+            console.log('Error: respuesta no ok');
         }
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
     }
-});
+}
+
+
+
+
+queryOne();
+queryTwo();
+
+
+
+
 // Obtener el contexto del canvas
 const ctx2 = document.getElementById('myPieChart').getContext('2d');
 
