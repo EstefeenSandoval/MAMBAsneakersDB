@@ -1,3 +1,33 @@
+// CONSULTAS
+
+async function testConnection() {
+    try {
+        const response = await fetch('http://localhost:3000/products/topThreeBestSellers');
+        if (response.ok) {
+            // Convertimos la respuesta a JSON
+            const data = await response.json();
+            console.log('Datos recibidos:', data);
+            // Mostrar la informacion
+            document.getElementById('topThreeBestSellers').innerHTML = data.map((product, index) => `<li class="list-group-item d-flex justify-content-between align-items-start">
+                      <span class="position-number">${index + 1}</span>
+                      <div class="ms-2 me-auto">
+                        <div class="fw-bold">${product.Producto}</div>
+                        Precio: $${product.Precio}
+                      </div>
+                      <span class="badge rounded-pill">${product.CantidadVendida}</span>
+                    <img src="../resources/productos/${product.Img}" alt="Imagen ${index + 1}" class="product-image ms-3">
+                    </li>`);
+        } else {
+            console.log('Error: respuesta no ok');
+        }
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+    }
+}
+testConnection();
+
+
+
 // Obtener el contexto del canvas
 const ctx = document.getElementById('myChart').getContext('2d');
 
