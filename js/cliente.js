@@ -68,7 +68,7 @@ const myPieChart = new Chart(ctx2, {
         }
     }
 });
-const ctx3 = document.getElementById('myLineChart').getContext('2d');
+/*const ctx3 = document.getElementById('myLineChart').getContext('2d');
 
 // Crear la gráfica de líneas
 const myLineChart = new Chart(ctx3, {
@@ -113,9 +113,9 @@ const myLineChart = new Chart(ctx3, {
             }
         }
     }
-});
+});*/
 // Obtener el contexto del canvas
-const ctx4 = document.getElementById('myScatterChart').getContext('2d');
+/*const ctx4 = document.getElementById('myScatterChart').getContext('2d');
 
 // Crear la gráfica de dispersión
 const myScatterChart = new Chart(ctx4, {
@@ -169,4 +169,101 @@ const myScatterChart = new Chart(ctx4, {
             }
         }
     }
-});
+});*/
+
+async function queryOne() {
+    try {
+        const response = await fetch('http://localhost:3000/client/top3');
+        if (response.ok) {
+            // Convertimos la respuesta a JSON
+            const data = await response.json();
+            console.log('Datos recibidos:', data);
+            // Mostrar la informacion
+            document.getElementById('topThreeBestSellers').innerHTML = data.map((cliente, index) => 
+                `<li class="list-group-item d-flex justify-content-between align-items-start">
+                      <span class="position-number">${index + 1}</span>
+                      <div class="ms-2 me-auto">
+                        <div class="fw-bold">${cliente.NOMBRE_CTE}</div>
+                        Consumo: $${cliente.TOTAL}
+                      </div>
+                    </li>`);
+        } else {
+            console.log('Error: respuesta no ok');
+        }
+    } catch (error) {
+        console.error('Error en la solicitud:', error);
+    }
+}
+
+async function queryFive() {
+    try {
+        const response = await fetch('http://localhost:3000/client/favProds');
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Datos recibidos:', data);
+
+            // Llenar la tabla
+            const tableBody = document.querySelector('#facturacionTable tbody');
+            tableBody.innerHTML = data.map(row => {
+                const totalFacturado = Number(row.TotalFacturado) || 0; // Convierte a número o asigna 0 si es inválido
+                return `
+                    <tr>
+                        <td>${row.Nombre_Cte}</td>
+                        <td>${row.Nombre_Prod}</td>
+                        <td>${row.TotalQuantity}</td>
+                    </tr>
+                `;
+            }).join('');
+
+
+            // Preparar datos para gráficos
+            const regions = [...new Set(data.map(item => item.Region))];
+            const totalByRegion = regions.map(region => {
+                return data
+                    .filter(item => item.Region === region)
+                    .reduce((sum, item) => sum + item.TotalFacturado, 0);
+            });
+
+            // Crear gráfico de pastel
+            const ctx = document.getElementById('regionChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: regions,
+                    datasets: [{
+                        label: 'Facturación por Región',
+                        data: totalByRegion,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                    }
+                }
+            });
+        } else {
+            console.error('Error en la respuesta del servidor.');
+        }
+    } catch (error) {
+        console.error('Error al obtener datos:', error);
+    }
+}
+
+queryOne();
+queryFive();
