@@ -12,7 +12,7 @@ const ctx = document.getElementById('myChart').getContext('2d');
 
 async function queryTwo() {
     try {
-        const response = await fetch('http://localhost:3000/client/byWeek');
+        const response = await fetch('http://localhost:3000/clients/byWeek');
         if (response.ok) {
             // Convertimos la respuesta a JSON
             const data = await response.json();
@@ -54,7 +54,7 @@ async function queryTwo() {
 
 async function queryOne() {
     try {
-        const response = await fetch('http://localhost:3000/client/top3');
+        const response = await fetch('http://localhost:3000/clients/top3');
         if (response.ok) {
             // Convertimos la respuesta a JSON
             const data = await response.json();
@@ -78,7 +78,7 @@ async function queryOne() {
 
 async function queryThree() {
     try {
-        const response = await fetch('http://localhost:3000/client/avg');
+        const response = await fetch('http://localhost:3000/clients/avg');
         if (response.ok) {
             // Convertimos la respuesta a JSON
             const data = await response.json();
@@ -97,7 +97,7 @@ async function queryThree() {
 
 async function queryFour() {
     try {
-        const response = await fetch('http://localhost:3000/client/edoEnvios');
+        const response = await fetch('http://localhost:3000/clients/edoEnvios');
         if (response.ok) {
             const data = await response.json();
             console.log('Datos recibidos edoEnvio:', data);
@@ -126,7 +126,7 @@ async function queryFour() {
 
 async function queryFive() {
     try {
-        const response = await fetch('http://localhost:3000/client/favProds');
+        const response = await fetch('http://localhost:3000/clients/favProds');
         if (response.ok) {
             const data = await response.json();
             console.log('Datos recibidos:', data);
