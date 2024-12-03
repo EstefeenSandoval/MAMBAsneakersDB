@@ -31,6 +31,48 @@ class Client {
        
     }
 
+    static async edoEnvios(){
+      try {
+          const [rows] = await db.query(
+            `SELECT Metodo_Envio, Estado_envio, SUM(Costo_envio) AS Costo
+            FROM envio
+            GROUP BY Metodo_Envio, Estado_envio WITH ROLLUP;`);
+          return rows; 
+        } catch (err) {
+          console.error('Error en la consulta favProds, Clientes:', err);
+          throw err;
+        }
+     
+    }
+
+    static async byWeek(){
+      try {
+          const [rows] = await db.query(
+            `CALL TotalSalesByWeek(11, 2024);`);
+          return rows; 
+        } catch (err) {
+          console.error('Error en la consulta byWeek, Clientes:', err);
+          throw err;
+        }
+    }
+
+    static async avg(){
+      try {
+          const [rows] = await db.query(
+            `SELECT AVG(TOTAL) AS TOTAL
+            FROM factura F
+            WHERE F.Tipo = 'Venta';`);
+          return rows; 
+        } catch (err) {
+          console.error('Error en la consulta byWeek, Clientes:', err);
+          throw err;
+        }
+    }
+
+    
+
+
+
 }
 
 module.exports = Client;

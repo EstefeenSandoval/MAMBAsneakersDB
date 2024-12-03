@@ -19,7 +19,37 @@ router.get('/favProds', async (req, res) => {
       res.json(fav); // Respondemos con los productos en formato JSON
     } catch (error) {
       console.error('Error al obtener topThree Clientes:', error);
-      res.status(500).json({ success: false, error: 'Error al obtener topThree' });
+      res.status(500).json({ success: false, error: 'Error al obtener favProds' });
+    }
+  });
+
+  router.get('/edoEnvios', async (req, res) => {
+    try {
+      const fav = await client.edoEnvios(); // Usamos el método getAll para obtener los productos
+      res.json(fav); // Respondemos con los productos en formato JSON
+    } catch (error) {
+      console.error('Error al obtener edoEnvios Clientes:', error);
+      res.status(500).json({ success: false, error: 'Error al obtener edoEnvios' });
+    }
+  });
+
+  router.get('/byWeek', async (req, res) => {
+    try {
+      const fav = await client.byWeek(); // Usamos el método getAll para obtener los productos
+      res.json(fav); // Respondemos con los productos en formato JSON
+    } catch (error) {
+      console.error('Error al obtener edoEnvios Clientes:', error);
+      res.status(500).json({ success: false, error: 'Error al obtener byWeek' });
+    }
+  });
+
+  router.get('/avg', async (req, res) => {
+    try {
+      const fav = await client.avg(); // Usamos el método getAll para obtener los productos
+      res.json(fav); // Respondemos con los productos en formato JSON
+    } catch (error) {
+      console.error('Error al obtener avg Clientes:', error);
+      res.status(500).json({ success: false, error: 'Error al obtener avg' });
     }
   });
 
