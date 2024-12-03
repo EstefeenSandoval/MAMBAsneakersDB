@@ -97,7 +97,7 @@ class Product {
   static async getBillings() { // Muestra el total facturado por producto, agrupado por cliente y región
     try {
     const [rows] = await db.query(`
-      SELECT * FROM BILLINGS;
+      SELECT * FROM factura;
   `);
     return rows; 
     } catch (err) {

@@ -56,7 +56,7 @@ router.get('/favProds', async (req, res) => {
 // Crear un cliente
 router.post('/create', async (req, res) => {
   try {
-    const result = await Client.create(req.body);
+    const result = await client.create(req.body);
     res.json({ success: true, message: 'Cliente creado', result });
   } catch (error) {
     console.error('Error al crear cliente:', error);
@@ -67,7 +67,7 @@ router.post('/create', async (req, res) => {
 // Leer todos los clientes
 router.get('/all', async (req, res) => {
   try {
-    const clients = await Client.getAll();
+    const clients = await client.getAll();
     res.json(clients);
   } catch (error) {
     console.error('Error al obtener clientes:', error);
@@ -79,7 +79,7 @@ router.get('/all', async (req, res) => {
 router.put('/update/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await Client.update(id, req.body);
+    const result = await client.update(id, req.body);
     res.json({ success: true, message: 'Cliente actualizado', result });
   } catch (error) {
     console.error('Error al actualizar cliente:', error);
@@ -91,7 +91,7 @@ router.put('/update/:id', async (req, res) => {
 router.delete('/delete/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await Client.delete(id);
+    const result = await client.delete(id);
     res.json({ success: true, message: 'Cliente eliminado', result });
   } catch (error) {
     console.error('Error al eliminar cliente:', error);
