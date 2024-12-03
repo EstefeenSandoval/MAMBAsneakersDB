@@ -1,0 +1,201 @@
+:root {
+    --primary-color: rgba(0, 0, 0, 0.942);
+    --secondary-color: rgba(255, 128, 0, 0.8);
+    --background-light: #f0f2f5;
+    --text-color: #333;
+    --border-radius: 12px;
+    --transition-speed: 0.3s;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Form Section Styling */
+.form-section {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 20px;
+    transition: transform var(--transition-speed) ease;
+}
+
+.form-section:hover {
+    transform: translateY(-5px);
+}
+
+.form-section h2 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--secondary-color);
+}
+
+.form-section fieldset {
+    border: none;
+    margin-bottom: 20px;
+}
+
+.form-section fieldset legend {
+    color: var(--primary-color);
+    font-weight: bold;
+    margin-bottom: 15px;
+    width: 100%;
+    text-align: left;
+}
+
+.form-section label {
+    display: block;
+    margin-top: 10px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.form-section input, 
+.form-section select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    transition: all var(--transition-speed) ease;
+}
+
+.form-section input:focus,
+.form-section select:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 2px rgba(255, 128, 0, 0.2);
+}
+
+.form-section button {
+    width: 100%;
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin-top: 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color var(--transition-speed) ease;
+}
+
+.form-section button:hover {
+    background-color: rgba(173, 67, 9, 0.8);
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .container {
+        padding: 10px;
+    }
+
+    .form-section {
+        padding: 15px;
+    }
+
+    .form-section input, 
+    .form-section select {
+        padding: 8px;
+    }
+}
+
+/* Navigation Styles */
+.nav-container {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#nav-links {
+    display: flex;
+    list-style: none;
+}
+
+.navL {
+    margin-left: 20px;
+}
+
+.navL a {
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: color var(--transition-speed) ease;
+}
+
+.navL a:hover {
+    color: var(--secondary-color);
+}
+
+/* Footer Styles */
+footer {
+    background-color: #121212;
+    color: #fff;
+    padding: 1rem;
+    margin-top: 20px;
+}
+
+.footer-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.footer-icons {
+    text-align: center;
+    font-size: 20px;
+}
+
+.footer-icons i {
+    margin: 0 10px;
+    color: #fff;
+    transition: color var(--transition-speed) ease;
+}
+
+.footer-icons i:hover {
+    color: var(--secondary-color);
+}
+
+.footer-text {
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.footer-text span {
+    margin: 0 10px;
+    cursor: pointer;
+    transition: color var(--transition-speed) ease;
+}
+
+.footer-text span:hover {
+    color: var(--secondary-color);
+}
+
+/* University Project Banner */
+.university-banner {
+    background-color: red;
+    color: black;
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: bold;
+}

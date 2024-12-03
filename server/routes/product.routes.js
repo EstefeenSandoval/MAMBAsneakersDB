@@ -83,4 +83,39 @@ router.get('/getBillings', async (req, res) => {
   }
 });
 
+// Crear un nuevo producto
+router.post('/create', async (req, res) => {
+  try {
+    const result = await Product.create(req.body);
+    res.json({ success: true, message: 'Producto creado', result });
+  } catch (error) {
+    console.error('Error al crear producto:', error);
+    res.status(500).json({ success: false, error: 'Error al crear producto' });
+  }
+});
+
+// Actualizar un producto
+router.put('/update/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await Product.update(id, req.body);
+    res.json({ success: true, message: 'Producto actualizado', result });
+  } catch (error) {
+    console.error('Error al actualizar producto:', error);
+    res.status(500).json({ success: false, error: 'Error al actualizar producto' });
+  }
+});
+
+// Eliminar un producto
+router.delete('/delete/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await Product.delete(id);
+    res.json({ success: true, message: 'Producto eliminado', result });
+  } catch (error) {
+    console.error('Error al eliminar producto:', error);
+    res.status(500).json({ success: false, error: 'Error al eliminar producto' });
+  }
+});
+
 module.exports = router;
