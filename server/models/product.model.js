@@ -1,5 +1,4 @@
-const db = require('../conexion'); // Asegúrate de que esté correctamente importado
-
+const db = require('../conexion'); // Asegúrate de que esté correctamente importado el archivo de conexión a la base de datos
 class Product {
   static async getAll() { // Obtiene todos los productos
     try {
@@ -121,6 +120,45 @@ class Product {
     return rows; 
     } catch (err) {
       console.error('Error en la consulta getBillings:', err);
+      throw err;
+    }
+  }
+
+  static async create(product) { // Crea un nuevo producto
+    try {
+      const { Nombre_Prod, Descripcion_Prod, Cantidad_Prod, PrecioUnit_Prod, Descuento_Prod, Imagen_Prod } = product;
+      const [result] = await db.query(`
+        INSERT INTO producto (Nombre_Prod, Descripcion_Prod, Cantidad_Prod, PrecioUnit_Prod, Descuento_Prod, Imagen_Prod)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `, [Nombre_Prod, Descripcion_Prod, Cantidad_Prod, PrecioUnit_Prod, Descuento_Prod, Imagen_Prod]);
+      return result; 
+    } catch (err) {
+      console.error('Error en la consulta create:', err);
+      throw err;
+    }
+  }
+
+  static async update(id, product) { // Actualiza un producto
+    try {
+      const { Nombre_Prod, Descripcion_Prod, Cantidad_Prod, PrecioUnit_Prod, Descuento_Prod, Imagen_Prod } = product;
+      const [result] = await db.query(`
+        UPDATE producto 
+        SET Nombre_Prod = ?, Descripcion_Prod = ?, Cantidad_Prod = ?, PrecioUnit_Prod = ?, Descuento_Prod = ?, Imagen_Prod = ?
+        WHERE ID_Prod = ?
+      `, [Nombre_Prod, Descripcion_Prod, Cantidad_Prod, PrecioUnit_Prod, Descuento_Prod, Imagen_Prod, id]);
+      return result; 
+    } catch (err) {
+      console.error('Error en la consulta update:', err);
+      throw err;
+    }
+  }
+
+  static async delete(id) { // Elimina un producto
+    try {
+      const [result] = await db.query('DELETE FROM producto WHERE ID_Prod = ?', [id]);
+      return result; 
+    } catch (err) {
+      console.error('Error en la consulta delete:', err);
       throw err;
     }
   }

@@ -8,6 +8,7 @@ const db = require('./conexion');
 const clientRoutes = require('./routes/client.routes');
 const productRoutes = require('./routes/product.routes');
 const providerRoutes = require('./routes/provider.routes');
+const billingRoutes = require('./routes/billing.routes');
 
 // Middlewares
 const cors = require('cors');
@@ -15,6 +16,9 @@ app.use(cors());
 
 // Rutas
 app.use('/products', productRoutes); // Todas las rutas en productRoutes estarán bajo /products
+app.use('/clients', clientRoutes);  // Todas las rutas en clientRoutes estarán bajo /clients
+app.use('/providers', providerRoutes);  // Todas las rutas en providerRoutes estarán bajo /providers
+app.use('/billings', billingRoutes);  // Todas las rutas en billingRoutes estarán bajo /billings
 
 // Ruta de prueba (opcional)
 app.get('/', (req, res) => {
