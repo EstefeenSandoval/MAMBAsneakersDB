@@ -1,0 +1,34 @@
+Create view favprods AS
+WITH CustomerPurchases AS (
+    SELECT 
+        C.Nombre_Cte, 
+        C.RFC_Cte, 
+        FC.ProductoID, 
+        P.Nombre_Prod, 
+        SUM(FC.Cantidad) AS S
+    FROM 
+        cliente C
+        JOIN factura F ON C.RFC_Cte = F.ClienteRFC
+        JOIN factura_producto FC ON F.Folio_Factura = FC.FacturaFolio
+        JOIN producto P ON FC.ProductoID = P.ID_Prod
+    GROUP BY 
+        C.Nombre_Cte, C.RFC_Cte, FC.ProductoID, P.Nombre_Prod
+),
+RankedPurchases AS (
+    SELECT 
+        CP.*,
+        RANK() OVER (PARTITION BY CP.Nombre_Cte, CP.RFC_Cte ORDER BY CP.S DESC) AS rnk
+    FROM 
+        CustomerPurchases CP
+)
+SELECT 
+    Nombre_Cte, 
+    RFC_Cte, 
+    ProductoID, 
+    Nombre_Prod, 
+    S AS TotalQuantity
+FROM 
+    RankedPurchases
+WHERE 
+    rnk = 1
+ORDER BY S DESC;
