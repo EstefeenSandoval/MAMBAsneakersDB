@@ -2,7 +2,7 @@
 
 async function queryOne() {
     try {
-        const response = await fetch('http://localhost:3000/provider/getTopMoreProductsSupplied');
+        const response = await fetch('http://localhost:3000/providers/getTopMoreProductsSupplied');
         if (response.ok) {
             // Convertimos la respuesta a JSON
             const data = await response.json();
@@ -25,7 +25,7 @@ async function queryOne() {
 
 async function queryTwo() {
     try {
-        const response = await fetch('http://localhost:3000/provider/get');
+        const response = await fetch('http://localhost:3000/providers/get');
         if (response.ok) {
             // Convertimos la respuesta a JSON
             const data = await response.json();
@@ -75,7 +75,7 @@ async function queryTwo() {
 async function queryThree() {
     try {
       // Solicitar datos del backend
-      const response = await fetch('http://localhost:3000/provider/getLowExcistence');
+      const response = await fetch('http://localhost:3000/providers/getLowExcistence');
       
       if (response.ok) {
         // Convertir la respuesta a JSON
@@ -149,7 +149,7 @@ async function queryThree() {
 
 async function queryFour() {
     try {
-        const response = await fetch('http://localhost:3000/provider/getAvgDiscount');
+        const response = await fetch('http://localhost:3000/providers/getAvgDiscount');
         if (response.ok) {
             // Convertimos la respuesta a JSON
             const data = await response.json();
@@ -166,7 +166,7 @@ async function queryFour() {
 
 async function queryFive() {
     try {
-        const response = await fetch('http://localhost:3000/provider/getBilling');
+        const response = await fetch('http://localhost:3000/providers/getBilling');
         if (response.ok) {
             const data = await response.json();
             console.log('Datos recibidos:', data);
@@ -194,7 +194,7 @@ async function queryFive() {
 
 
 queryOne();
-//queryTwo();
+// queryTwo();
 queryThree();
 queryFour();
 queryFive();
