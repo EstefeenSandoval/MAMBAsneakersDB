@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 03-11-2024 a las 00:26:22
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Host: 127.0.0.1
+-- Generation Time: Dec 03, 2024 at 10:41 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,115 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `mambadb`
+-- Database: `mambadb`
 --
+
+DELIMITER $$
+--
+-- Procedures
+--
+CREATE DEFINER=`root`@`localhost` PROCEDURE `TopMoreProductsSupplied` ()   BEGIN
+    SELECT 
+        pr.Nombre_Prov AS Proveedor, 
+        COUNT(DISTINCT fp.ProductoID) AS ProductosSuministrados
+    FROM 
+        proveedor pr
+    JOIN 
+        factura f ON pr.ID_Prov = f.ProveedorID
+    JOIN 
+        factura_producto fp ON f.Folio_Factura = fp.FacturaFolio
+    GROUP BY 
+        pr.ID_Prov
+    ORDER BY 
+        ProductosSuministrados DESC
+    LIMIT 3;  
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `TopSellingProducts` ()   BEGIN
+    -- Declare variables to store data for each row
+    DECLARE v_ID_Prod INT;
+    DECLARE v_Nombre_Prod VARCHAR(255);
+    DECLARE v_Cantidad INT;
+    DECLARE v_Finished INT DEFAULT 0;
+
+    -- Declare a cursor to loop through the sold products
+    DECLARE product_cursor CURSOR FOR
+        SELECT p.ID_Prod, p.Nombre_Prod, SUM(fp.Cantidad)
+        FROM Factura_Producto fp
+        INNER JOIN Producto p ON fp.ProductoID = p.ID_Prod
+        GROUP BY p.ID_Prod, p.Nombre_Prod;
+        
+    -- Declare the handler to close the cursor when finished
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_Finished = 1;
+    
+    -- Create a temporary table to store the results
+    CREATE TEMPORARY TABLE TopSellingProducts (
+        ID_Prod INT,
+        Product_Name VARCHAR(255),
+        Total_Sold INT
+    );
+
+    -- Open the cursor
+    OPEN product_cursor;
+    
+    -- Loop to fetch the results from the cursor
+    read_loop: LOOP
+        FETCH product_cursor INTO v_ID_Prod, v_Nombre_Prod, v_Cantidad;
+        
+        IF v_Finished = 1 THEN
+            LEAVE read_loop;
+        END IF;
+
+        -- Insert the fetched data into the temporary table
+        INSERT INTO TopSellingProducts (ID_Prod, Product_Name, Total_Sold)
+        VALUES (v_ID_Prod, v_Nombre_Prod, v_Cantidad);
+    END LOOP;
+
+    -- Close the cursor
+    CLOSE product_cursor;
+
+    -- Display the top selling products report
+    SELECT * FROM TopSellingProducts ORDER BY Total_Sold DESC;
+
+    -- Drop the temporary table
+    DROP TEMPORARY TABLE TopSellingProducts;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `TotalSalesByWeek` (IN `month` INT, IN `year` INT)   BEGIN
+    SELECT 
+        CASE
+            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 1 THEN 'Week 1'
+            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 2 THEN 'Week 2'
+            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 3 THEN 'Week 3'
+            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 4 THEN 'Week 4'
+        END AS Week,
+        SUM(Total) AS TotalSales
+    FROM factura
+    WHERE MONTH(Fecha_Creada) = month 
+      AND YEAR(Fecha_Creada) = year
+    GROUP BY WEEK(Fecha_Creada, 1);
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `cliente`
+-- Stand-in structure for view `billings`
+-- (See below for the actual view)
+--
+CREATE TABLE `billings` (
+`Producto` varchar(40)
+,`Cliente` varchar(50)
+,`Region` varchar(50)
+,`TotalFacturado` decimal(42,2)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cliente`
 --
 
 CREATE TABLE `cliente` (
@@ -36,7 +138,7 @@ CREATE TABLE `cliente` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `cliente`
+-- Dumping data for table `cliente`
 --
 
 INSERT INTO `cliente` (`RFC_Cte`, `Nombre_Cte`, `Calle`, `Colonia`, `LocalidadID`) VALUES
@@ -143,7 +245,7 @@ INSERT INTO `cliente` (`RFC_Cte`, `Nombre_Cte`, `Calle`, `Colonia`, `LocalidadID
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `envio`
+-- Table structure for table `envio`
 --
 
 CREATE TABLE `envio` (
@@ -157,7 +259,7 @@ CREATE TABLE `envio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `envio`
+-- Dumping data for table `envio`
 --
 
 INSERT INTO `envio` (`ID_Envio`, `FechaSalida`, `FechaLlegada`, `Metodo_Envio`, `Costo_Envio`, `Estado_Envio`, `Direccion_Envio`) VALUES
@@ -205,7 +307,7 @@ INSERT INTO `envio` (`ID_Envio`, `FechaSalida`, `FechaLlegada`, `Metodo_Envio`, 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `estado`
+-- Table structure for table `estado`
 --
 
 CREATE TABLE `estado` (
@@ -214,7 +316,7 @@ CREATE TABLE `estado` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `estado`
+-- Dumping data for table `estado`
 --
 
 INSERT INTO `estado` (`ID_Estado`, `Nombre_Estado`) VALUES
@@ -254,7 +356,7 @@ INSERT INTO `estado` (`ID_Estado`, `Nombre_Estado`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `factura`
+-- Table structure for table `factura`
 --
 
 CREATE TABLE `factura` (
@@ -270,7 +372,7 @@ CREATE TABLE `factura` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `factura`
+-- Dumping data for table `factura`
 --
 
 INSERT INTO `factura` (`Folio_Factura`, `Fecha_Creada`, `Subtotal`, `Impuesto`, `Total`, `Tipo`, `EnvioID`, `ProveedorID`, `ClienteRFC`) VALUES
@@ -318,7 +420,7 @@ INSERT INTO `factura` (`Folio_Factura`, `Fecha_Creada`, `Subtotal`, `Impuesto`, 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `factura_producto`
+-- Table structure for table `factura_producto`
 --
 
 CREATE TABLE `factura_producto` (
@@ -328,7 +430,7 @@ CREATE TABLE `factura_producto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `factura_producto`
+-- Dumping data for table `factura_producto`
 --
 
 INSERT INTO `factura_producto` (`FacturaFolio`, `ProductoID`, `Cantidad`) VALUES
@@ -384,7 +486,21 @@ INSERT INTO `factura_producto` (`FacturaFolio`, `ProductoID`, `Cantidad`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `localidad`
+-- Stand-in structure for view `favprods`
+-- (See below for the actual view)
+--
+CREATE TABLE `favprods` (
+`Nombre_Cte` varchar(50)
+,`RFC_Cte` varchar(50)
+,`ProductoID` int(11)
+,`Nombre_Prod` varchar(40)
+,`TotalQuantity` decimal(32,0)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `localidad`
 --
 
 CREATE TABLE `localidad` (
@@ -394,7 +510,7 @@ CREATE TABLE `localidad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `localidad`
+-- Dumping data for table `localidad`
 --
 
 INSERT INTO `localidad` (`ID_Localidad`, `Nombre_Localidad`, `MunicipioID`) VALUES
@@ -476,7 +592,7 @@ INSERT INTO `localidad` (`ID_Localidad`, `Nombre_Localidad`, `MunicipioID`) VALU
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `municipio`
+-- Table structure for table `municipio`
 --
 
 CREATE TABLE `municipio` (
@@ -486,7 +602,7 @@ CREATE TABLE `municipio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `municipio`
+-- Dumping data for table `municipio`
 --
 
 INSERT INTO `municipio` (`ID_Municipio`, `Nombre_Municipio`, `EstadoID`) VALUES
@@ -574,7 +690,7 @@ INSERT INTO `municipio` (`ID_Municipio`, `Nombre_Municipio`, `EstadoID`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `producto`
+-- Table structure for table `producto`
 --
 
 CREATE TABLE `producto` (
@@ -588,7 +704,7 @@ CREATE TABLE `producto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `producto`
+-- Dumping data for table `producto`
 --
 
 INSERT INTO `producto` (`ID_Prod`, `Nombre_Prod`, `Descripcion_Prod`, `Cantidad_Prod`, `PrecioUnit_Prod`, `Descuento_Prod`, `Imagen_Prod`) VALUES
@@ -626,7 +742,7 @@ INSERT INTO `producto` (`ID_Prod`, `Nombre_Prod`, `Descripcion_Prod`, `Cantidad_
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `proveedor`
+-- Table structure for table `proveedor`
 --
 
 CREATE TABLE `proveedor` (
@@ -643,7 +759,7 @@ CREATE TABLE `proveedor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `proveedor`
+-- Dumping data for table `proveedor`
 --
 
 INSERT INTO `proveedor` (`ID_Prov`, `Nombre_Prov`, `Contacto_Prov`, `Telefono_Prov`, `Email_Prov`, `Direccion_Prov`, `Ciudad_Prov`, `Pais_Prov`, `Imagen_Prov`, `LocalidadID`) VALUES
@@ -678,31 +794,50 @@ INSERT INTO `proveedor` (`ID_Prov`, `Nombre_Prov`, `Contacto_Prov`, `Telefono_Pr
 (29, 'Distribuidora San José', 'Roberto Morales', '473-901-2345', 'ventas@distribuidorasanjose.com', 'Calle Lázaro Cárdenas 123', 'San José de Gracia', 'México', 'prov29.jpg', 10),
 (30, 'Proveedores CDMX', 'Fernando Ruiz', '474-012-3456', 'contacto@cdmx.com', 'Paseo de la Reforma 456', 'Ciudad de México', 'México', 'prov30.jpg', 11);
 
+-- --------------------------------------------------------
+
 --
--- Índices para tablas volcadas
+-- Structure for view `billings`
+--
+DROP TABLE IF EXISTS `billings`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `billings`  AS SELECT `p`.`Nombre_Prod` AS `Producto`, `c`.`Nombre_Cte` AS `Cliente`, `l`.`Nombre_Localidad` AS `Region`, sum(`fp`.`Cantidad` * `p`.`PrecioUnit_Prod`) AS `TotalFacturado` FROM ((((`producto` `p` join `factura_producto` `fp` on(`p`.`ID_Prod` = `fp`.`ProductoID`)) join `factura` `f` on(`fp`.`FacturaFolio` = `f`.`Folio_Factura`)) join `cliente` `c` on(`f`.`ClienteRFC` = `c`.`RFC_Cte`)) join `localidad` `l` on(`c`.`LocalidadID` = `l`.`ID_Localidad`)) GROUP BY `p`.`ID_Prod`, `c`.`RFC_Cte`, `l`.`ID_Localidad` ORDER BY sum(`fp`.`Cantidad` * `p`.`PrecioUnit_Prod`) DESC ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `favprods`
+--
+DROP TABLE IF EXISTS `favprods`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `favprods`  AS WITH CustomerPurchases AS (SELECT `c`.`Nombre_Cte` AS `Nombre_Cte`, `c`.`RFC_Cte` AS `RFC_Cte`, `fc`.`ProductoID` AS `ProductoID`, `p`.`Nombre_Prod` AS `Nombre_Prod`, sum(`fc`.`Cantidad`) AS `S` FROM (((`cliente` `c` join `factura` `f` on(`c`.`RFC_Cte` = `f`.`ClienteRFC`)) join `factura_producto` `fc` on(`f`.`Folio_Factura` = `fc`.`FacturaFolio`)) join `producto` `p` on(`fc`.`ProductoID` = `p`.`ID_Prod`)) GROUP BY `c`.`Nombre_Cte`, `c`.`RFC_Cte`, `fc`.`ProductoID`, `p`.`Nombre_Prod`), RankedPurchases AS (SELECT `cp`.`Nombre_Cte` AS `Nombre_Cte`, `cp`.`RFC_Cte` AS `RFC_Cte`, `cp`.`ProductoID` AS `ProductoID`, `cp`.`Nombre_Prod` AS `Nombre_Prod`, `cp`.`S` AS `S`, rank() over ( partition by `cp`.`Nombre_Cte`,`cp`.`RFC_Cte` order by `cp`.`S` desc) AS `rnk` FROM `customerpurchases` AS `cp`) SELECT `rankedpurchases`.`Nombre_Cte` AS `Nombre_Cte`, `rankedpurchases`.`RFC_Cte` AS `RFC_Cte`, `rankedpurchases`.`ProductoID` AS `ProductoID`, `rankedpurchases`.`Nombre_Prod` AS `Nombre_Prod`, `rankedpurchases`.`S` AS `TotalQuantity` FROM `rankedpurchases` WHERE `rankedpurchases`.`rnk` = 1 ORDER BY `rankedpurchases`.`S` AS `DESCdesc` ASC  ;
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- Indices de la tabla `cliente`
+-- Indexes for table `cliente`
 --
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`RFC_Cte`),
-  ADD KEY `LocalidadID` (`LocalidadID`);
+  ADD KEY `LocalidadID` (`LocalidadID`),
+  ADD KEY `idx_name_cliente` (`Nombre_Cte`);
 
 --
--- Indices de la tabla `envio`
+-- Indexes for table `envio`
 --
 ALTER TABLE `envio`
   ADD PRIMARY KEY (`ID_Envio`);
 
 --
--- Indices de la tabla `estado`
+-- Indexes for table `estado`
 --
 ALTER TABLE `estado`
   ADD PRIMARY KEY (`ID_Estado`);
 
 --
--- Indices de la tabla `factura`
+-- Indexes for table `factura`
 --
 ALTER TABLE `factura`
   ADD PRIMARY KEY (`Folio_Factura`),
@@ -711,51 +846,51 @@ ALTER TABLE `factura`
   ADD KEY `ClienteRFC` (`ClienteRFC`);
 
 --
--- Indices de la tabla `factura_producto`
+-- Indexes for table `factura_producto`
 --
 ALTER TABLE `factura_producto`
   ADD PRIMARY KEY (`FacturaFolio`,`ProductoID`),
   ADD KEY `ProductoID` (`ProductoID`);
 
 --
--- Indices de la tabla `localidad`
+-- Indexes for table `localidad`
 --
 ALTER TABLE `localidad`
   ADD PRIMARY KEY (`ID_Localidad`),
   ADD KEY `MunicipioID` (`MunicipioID`);
 
 --
--- Indices de la tabla `municipio`
+-- Indexes for table `municipio`
 --
 ALTER TABLE `municipio`
   ADD PRIMARY KEY (`ID_Municipio`),
   ADD KEY `EstadoID` (`EstadoID`);
 
 --
--- Indices de la tabla `producto`
+-- Indexes for table `producto`
 --
 ALTER TABLE `producto`
   ADD PRIMARY KEY (`ID_Prod`);
 
 --
--- Indices de la tabla `proveedor`
+-- Indexes for table `proveedor`
 --
 ALTER TABLE `proveedor`
   ADD PRIMARY KEY (`ID_Prov`),
   ADD KEY `LocalidadID` (`LocalidadID`);
 
 --
--- Restricciones para tablas volcadas
+-- Constraints for dumped tables
 --
 
 --
--- Filtros para la tabla `cliente`
+-- Constraints for table `cliente`
 --
 ALTER TABLE `cliente`
   ADD CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`LocalidadID`) REFERENCES `localidad` (`ID_Localidad`);
 
 --
--- Filtros para la tabla `factura`
+-- Constraints for table `factura`
 --
 ALTER TABLE `factura`
   ADD CONSTRAINT `factura_ibfk_1` FOREIGN KEY (`EnvioID`) REFERENCES `envio` (`ID_Envio`),
@@ -763,26 +898,26 @@ ALTER TABLE `factura`
   ADD CONSTRAINT `factura_ibfk_3` FOREIGN KEY (`ClienteRFC`) REFERENCES `cliente` (`RFC_Cte`);
 
 --
--- Filtros para la tabla `factura_producto`
+-- Constraints for table `factura_producto`
 --
 ALTER TABLE `factura_producto`
   ADD CONSTRAINT `factura_producto_ibfk_1` FOREIGN KEY (`FacturaFolio`) REFERENCES `factura` (`Folio_Factura`),
   ADD CONSTRAINT `factura_producto_ibfk_2` FOREIGN KEY (`ProductoID`) REFERENCES `producto` (`ID_Prod`);
 
 --
--- Filtros para la tabla `localidad`
+-- Constraints for table `localidad`
 --
 ALTER TABLE `localidad`
   ADD CONSTRAINT `localidad_ibfk_1` FOREIGN KEY (`MunicipioID`) REFERENCES `municipio` (`ID_Municipio`);
 
 --
--- Filtros para la tabla `municipio`
+-- Constraints for table `municipio`
 --
 ALTER TABLE `municipio`
   ADD CONSTRAINT `municipio_ibfk_1` FOREIGN KEY (`EstadoID`) REFERENCES `estado` (`ID_Estado`);
 
 --
--- Filtros para la tabla `proveedor`
+-- Constraints for table `proveedor`
 --
 ALTER TABLE `proveedor`
   ADD CONSTRAINT `proveedor_ibfk_1` FOREIGN KEY (`LocalidadID`) REFERENCES `localidad` (`ID_Localidad`);
