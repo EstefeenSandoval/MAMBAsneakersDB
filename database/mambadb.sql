@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 03, 2024 at 04:46 AM
+-- Generation Time: Dec 03, 2024 at 10:41 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -91,6 +91,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `TopSellingProducts` ()   BEGIN
     -- Drop the temporary table
     DROP TEMPORARY TABLE TopSellingProducts;
 
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `TotalSalesByWeek` (IN `month` INT, IN `year` INT)   BEGIN
+    SELECT 
+        CASE
+            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 1 THEN 'Week 1'
+            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 2 THEN 'Week 2'
+            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 3 THEN 'Week 3'
+            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 4 THEN 'Week 4'
+        END AS Week,
+        SUM(Total) AS TotalSales
+    FROM factura
+    WHERE MONTH(Fecha_Creada) = month 
+      AND YEAR(Fecha_Creada) = year
+    GROUP BY WEEK(Fecha_Creada, 1);
 END$$
 
 DELIMITER ;
