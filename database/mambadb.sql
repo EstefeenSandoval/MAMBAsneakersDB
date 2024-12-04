@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2024 at 03:13 AM
+-- Generation Time: Dec 04, 2024 at 04:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -47,14 +47,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `TopSellingProducts` ()   BEGIN
     DECLARE v_ID_Prod INT;
     DECLARE v_Nombre_Prod VARCHAR(255);
     DECLARE v_Cantidad INT;
+    DECLARE v_Imagen VARCHAR(255);
+    DECLARE v_Precio DECIMAL(10, 2);
     DECLARE v_Finished INT DEFAULT 0;
 
     -- Declare a cursor to loop through the sold products
     DECLARE product_cursor CURSOR FOR
-        SELECT p.ID_Prod, p.Nombre_Prod, SUM(fp.Cantidad)
+        SELECT 
+            p.ID_Prod, 
+            p.Nombre_Prod, 
+            SUM(fp.Cantidad) AS Total_Vendido,
+            p.Imagen_Prod AS Imagen, 
+            p.PrecioUnit_Prod AS Precio
         FROM Factura_Producto fp
         INNER JOIN Producto p ON fp.ProductoID = p.ID_Prod
-        GROUP BY p.ID_Prod, p.Nombre_Prod;
+        GROUP BY p.ID_Prod, p.Nombre_Prod, p.Imagen_Prod, p.PrecioUnit_Prod;
         
     -- Declare the handler to close the cursor when finished
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_Finished = 1;
@@ -63,7 +70,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `TopSellingProducts` ()   BEGIN
     CREATE TEMPORARY TABLE TopSellingProducts (
         ID_Prod INT,
         Product_Name VARCHAR(255),
-        Total_Sold INT
+        Total_Sold INT,
+        Image_Name VARCHAR(255),
+        Price DECIMAL(10, 2)
     );
 
     -- Open the cursor
@@ -71,23 +80,24 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `TopSellingProducts` ()   BEGIN
     
     -- Loop to fetch the results from the cursor
     read_loop: LOOP
-        FETCH product_cursor INTO v_ID_Prod, v_Nombre_Prod, v_Cantidad;
+        FETCH product_cursor INTO v_ID_Prod, v_Nombre_Prod, v_Cantidad, v_Imagen, v_Precio;
         
         IF v_Finished = 1 THEN
             LEAVE read_loop;
         END IF;
 
         -- Insert the fetched data into the temporary table
-        INSERT INTO TopSellingProducts (ID_Prod, Product_Name, Total_Sold)
-        VALUES (v_ID_Prod, v_Nombre_Prod, v_Cantidad);
+        INSERT INTO TopSellingProducts (ID_Prod, Product_Name, Total_Sold, Image_Name, Price)
+        VALUES (v_ID_Prod, v_Nombre_Prod, v_Cantidad, v_Imagen, v_Precio);
     END LOOP;
 
     -- Close the cursor
     CLOSE product_cursor;
 
     -- Display the top selling products report
-    SELECT * FROM TopSellingProducts ORDER BY Total_Sold DESC
-LIMIT 3;
+    SELECT * FROM TopSellingProducts 
+    ORDER BY Total_Sold DESC
+    LIMIT 3;
 
     -- Drop the temporary table
     DROP TEMPORARY TABLE TopSellingProducts;
@@ -662,6 +672,18 @@ CREATE TABLE `log_cliente_deletion` (
 -- --------------------------------------------------------
 
 --
+-- Stand-in structure for view `lowexistenceproducts`
+-- (See below for the actual view)
+--
+CREATE TABLE `lowexistenceproducts` (
+`Proveedor` varchar(50)
+,`Producto` varchar(40)
+,`Existencias` int(11)
+);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `municipio`
 --
 
@@ -881,6 +903,15 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 DROP TABLE IF EXISTS `favprods`;
 
 CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `favprods`  AS WITH CustomerPurchases AS (SELECT `c`.`Nombre_Cte` AS `Nombre_Cte`, `c`.`RFC_Cte` AS `RFC_Cte`, `fc`.`ProductoID` AS `ProductoID`, `p`.`Nombre_Prod` AS `Nombre_Prod`, sum(`fc`.`Cantidad`) AS `S` FROM (((`cliente` `c` join `factura` `f` on(`c`.`RFC_Cte` = `f`.`ClienteRFC`)) join `factura_producto` `fc` on(`f`.`Folio_Factura` = `fc`.`FacturaFolio`)) join `producto` `p` on(`fc`.`ProductoID` = `p`.`ID_Prod`)) GROUP BY `c`.`Nombre_Cte`, `c`.`RFC_Cte`, `fc`.`ProductoID`, `p`.`Nombre_Prod`), RankedPurchases AS (SELECT `cp`.`Nombre_Cte` AS `Nombre_Cte`, `cp`.`RFC_Cte` AS `RFC_Cte`, `cp`.`ProductoID` AS `ProductoID`, `cp`.`Nombre_Prod` AS `Nombre_Prod`, `cp`.`S` AS `S`, rank() over ( partition by `cp`.`Nombre_Cte`,`cp`.`RFC_Cte` order by `cp`.`S` desc) AS `rnk` FROM `customerpurchases` AS `cp`) SELECT `rankedpurchases`.`Nombre_Cte` AS `Nombre_Cte`, `rankedpurchases`.`RFC_Cte` AS `RFC_Cte`, `rankedpurchases`.`ProductoID` AS `ProductoID`, `rankedpurchases`.`Nombre_Prod` AS `Nombre_Prod`, `rankedpurchases`.`S` AS `TotalQuantity` FROM `rankedpurchases` WHERE `rankedpurchases`.`rnk` = 1 ORDER BY `rankedpurchases`.`S` AS `DESCdesc` ASC  ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure for view `lowexistenceproducts`
+--
+DROP TABLE IF EXISTS `lowexistenceproducts`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `lowexistenceproducts`  AS SELECT DISTINCT `pr`.`Nombre_Prov` AS `Proveedor`, `p`.`Nombre_Prod` AS `Producto`, `p`.`Cantidad_Prod` AS `Existencias` FROM (((`proveedor` `pr` join `factura` `f` on(`pr`.`ID_Prov` = `f`.`ProveedorID`)) join `factura_producto` `fp` on(`f`.`Folio_Factura` = `fp`.`FacturaFolio`)) join `producto` `p` on(`fp`.`ProductoID` = `p`.`ID_Prod`)) WHERE `p`.`Cantidad_Prod` < 10 ORDER BY `p`.`Cantidad_Prod` ASC ;
 
 --
 -- Indexes for dumped tables
