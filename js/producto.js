@@ -189,7 +189,7 @@ async function queryFive() {
                     .reduce((sum, item) => sum + item.TotalFacturado, 0);
             });
 
-            // Crear gráfico de pastel
+           /*  // Crear gráfico de pastel
             const ctx = document.getElementById('regionChart').getContext('2d');
             new Chart(ctx, {
                 type: 'pie',
@@ -221,7 +221,7 @@ async function queryFive() {
                         },
                     }
                 }
-            });
+            }); */
         } else {
             console.error('Error en la respuesta del servidor.');
         }
