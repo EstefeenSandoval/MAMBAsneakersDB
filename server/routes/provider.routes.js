@@ -94,9 +94,9 @@ router.get('/getBilling', async (req, res) => {
 });
 
   // Ruta para obtener 
-  router.get('/get', async (req, res) => {
+  router.get('/getIntersect', async (req, res) => {
     try {
-      const providers = await Provider.getLowExcistence(); // Usamos el método getAll para obtener los proveedores
+      const providers = await Provider.getIntersect(); // Usamos el método getAll para obtener los proveedores
       res.json(providers); // Respondemos con los proveedores en formato JSON
     } catch (error) {
       console.error('Error al obtener proveedores:', error);

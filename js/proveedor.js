@@ -25,44 +25,14 @@ async function queryOne() {
 
 async function queryTwo() {
     try {
-        const response = await fetch('http://localhost:3000/providers/get');
+        const response = await fetch('http://localhost:3000/providers/getIntersect');
         if (response.ok) {
             // Convertimos la respuesta a JSON
             const data = await response.json();
             console.log('Datos recibidos:', data);
-            let nameProduct = [];
-            let totalIncome = [];
-            data.map((product) => {
-                nameProduct.push(product.Producto);
-                totalIncome.push(product.IngresosTotales);
-            });
-            // Mostrar la informacion
-            // Obtener el contexto del canvas
-            const ctx = document.getElementById('myChart').getContext('2d');
-            // Crear la gráfica
-            const myChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: nameProduct,
-                    datasets: [{
-                        label: 'Ingresos',
-                        data: totalIncome,
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    indexAxis: 'y',
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
 
+            // Mostrar la informacion
+            document.getElementById('discount').innerHTML = data.map((proveedor) => `<li>$${proveedor.Proveedor}</li>`);
 
         } else {
             console.log('Error: respuesta no ok');
@@ -194,7 +164,7 @@ async function queryFive() {
 
 
 queryOne();
-// queryTwo();
+queryTwo();
 queryThree();
 queryFour();
 queryFive();

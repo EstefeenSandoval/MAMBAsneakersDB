@@ -4,33 +4,7 @@ class Provider {
   static async getAll() { // Obtiene todos los proveedores
     try {
       const [rows] = await db.query(`
-        
-                -- Proveedores que han suministrado más de 10 productos en cualquier factura
-        SELECT DISTINCT 
-            pr.Nombre_Prov AS Proveedor
-        FROM 
-            proveedor pr
-        JOIN 
-            factura f ON pr.ID_Prov = f.ProveedorID
-        JOIN 
-            factura_producto fp ON f.Folio_Factura = fp.FacturaFolio
-        GROUP BY 
-            pr.ID_Prov
-        HAVING 
-            COUNT(fp.ProductoID) > 10
-
-        INTERSECT
-
-        -- Proveedores de la región "Centro"
-        SELECT 
-            pr.Nombre_Prov AS Proveedor
-        FROM 
-            proveedor pr
-        JOIN 
-            localidad l ON pr.LocalidadID = l.ID_Localidad
-        WHERE 
-            l.Nombre_Localidad = 'Centro';
-        
+        SELECT * FROM proveedor;
         `);
       return rows; 
     } catch (err) {
@@ -188,10 +162,33 @@ class Provider {
     }
   }
 
-  static async get() { // Top 5 proveedores
+  static async getIntersect() { // Proveedores que han suministrado más de 10 productos en cualquier factura y Proveedores de la región "Centro"
     try {
       const [rows] = await db.query(`
-        
+        SELECT DISTINCT 
+            pr.Nombre_Prov AS Proveedor
+        FROM 
+            proveedor pr
+        JOIN 
+            factura f ON pr.ID_Prov = f.ProveedorID
+        JOIN 
+            factura_producto fp ON f.Folio_Factura = fp.FacturaFolio
+        GROUP BY 
+            pr.ID_Prov
+        HAVING 
+            COUNT(fp.ProductoID) > 10
+
+        INTERSECT
+
+        SELECT 
+            pr.Nombre_Prov AS Proveedor
+        FROM 
+            proveedor pr
+        JOIN 
+            localidad l ON pr.LocalidadID = l.ID_Localidad
+        WHERE 
+            l.Nombre_Localidad = 'Centro';
+        LIMIT 3;
     `);
     return rows; 
     } catch (err) {
