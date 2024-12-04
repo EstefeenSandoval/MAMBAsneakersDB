@@ -41,7 +41,7 @@ class Product {
     }
   }
 
-  static async getTopIncomesPerProduct() { // Top 5 productos más vendidos - Consulta los productos más vendidos según la cantidad total en todas las facturas
+  static async getTopIncomesPerProduct() { // Top 5 productos más vendidos - Recuperar los productos que han generado mayores ingresos totales
     try {
       const [rows] = await db.query(`
         SELECT 
@@ -66,7 +66,7 @@ class Product {
     }
   }
 
-  static async getLowExcistence() { // Top 5 productos más vendidos - Consulta los productos más vendidos según la cantidad total en todas las facturas
+  static async getLowExcistence() { // Identificar los 6 productos con menor cantidad en existencia
     try {
       const [rows] = await db.query(`
         SELECT 
@@ -85,7 +85,7 @@ class Product {
     }
   }
 
-  static async getAvgDiscount() { // Top 5 productos más vendidos - Consulta los productos más vendidos según la cantidad total en todas las facturas
+  static async getAvgDiscount() { // Calcular el descuento promedio aplicado a los productos
     try {
       const [rows] = await db.query(`
         SELECT 

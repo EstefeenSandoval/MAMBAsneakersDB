@@ -52,7 +52,7 @@ class Provider {
         }
     }
 
-  static async getTopMoreProductsSupplied() { // Top 5 proveedores
+  static async getTopMoreProductsSupplied() { // Recuperar los 3 principales proveedores que suministran más productos únicos, ordenados de mayor a menor
     try {
       /*const [rows] = await db.query(`
         SELECT 
@@ -80,7 +80,7 @@ class Provider {
     }
   }
 
-  static async getBilling() { // Top 5 proveedores
+  static async getBilling() { // Obtener el total facturado por combinación de proveedor, cliente y región, ordenado por el monto total facturado
     try {
       const [rows] = await db.query(`
         SELECT 
@@ -112,7 +112,7 @@ class Provider {
     }
   }
 
-  static async getAvgDiscount() { // Top 5 proveedores
+  static async getAvgDiscount() { // Mostrar qué proveedores suelen ofrecer mayores descuentos en promedio
     try {
       const [rows] = await db.query(`
         SELECT 
@@ -138,7 +138,7 @@ class Provider {
     }
   }
 
-  static async getLowExcistence() { // Top 5 proveedores
+  static async getLowExcistence() { // Ayudar a identificar productos que podrían necesitar reabastecimiento urgente
     try {
       const [rows] = await db.query(`
         SELECT 
