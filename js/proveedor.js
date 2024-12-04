@@ -50,7 +50,7 @@ async function queryThree() {
       if (response.ok) {
         // Convertir la respuesta a JSON
         const data = await response.json();
-        console.log('Datos recibidos:', data);
+        console.log('Datos recibidos LE:', data);
   
         let nameProduct = [];
         let existence = [];
