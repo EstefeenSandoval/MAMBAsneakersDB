@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Dec 03, 2024 at 10:41 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 04-12-2024 a las 00:13:12
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,12 +18,12 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `mambadb`
+-- Base de datos: `mambadb`
 --
 
 DELIMITER $$
 --
--- Procedures
+-- Procedimientos
 --
 CREATE DEFINER=`root`@`localhost` PROCEDURE `TopMoreProductsSupplied` ()   BEGIN
     SELECT 
@@ -93,40 +93,12 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `TopSellingProducts` ()   BEGIN
 
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `TotalSalesByWeek` (IN `month` INT, IN `year` INT)   BEGIN
-    SELECT 
-        CASE
-            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 1 THEN 'Week 1'
-            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 2 THEN 'Week 2'
-            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 3 THEN 'Week 3'
-            WHEN WEEK(Fecha_Creada, 1) - WEEK(DATE_FORMAT(Fecha_Creada, '%Y-%m-01'), 1) + 1 = 4 THEN 'Week 4'
-        END AS Week,
-        SUM(Total) AS TotalSales
-    FROM factura
-    WHERE MONTH(Fecha_Creada) = month 
-      AND YEAR(Fecha_Creada) = year
-    GROUP BY WEEK(Fecha_Creada, 1);
-END$$
-
 DELIMITER ;
 
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `billings`
--- (See below for the actual view)
---
-CREATE TABLE `billings` (
-`Producto` varchar(40)
-,`Cliente` varchar(50)
-,`Region` varchar(50)
-,`TotalFacturado` decimal(42,2)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cliente`
+-- Estructura de tabla para la tabla `cliente`
 --
 
 CREATE TABLE `cliente` (
@@ -138,67 +110,69 @@ CREATE TABLE `cliente` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `cliente`
+-- Volcado de datos para la tabla `cliente`
 --
 
 INSERT INTO `cliente` (`RFC_Cte`, `Nombre_Cte`, `Calle`, `Colonia`, `LocalidadID`) VALUES
-('AAG000001', 'Juan Pérez', 'Av. Universidad', 'La Soledad', 1),
-('AAG000002', 'María López', 'Calle Reforma', 'Zona Centro', 1),
+('AAG000001', 'Juan Pérez', 'Av. Universidad', 'La Soledad', 4),
+('AAG000002', 'María López', 'Calle Reforma', 'Zona Centro', 10),
 ('AAG000003', 'Pedro Gómez', 'Calle Hidalgo', 'Barrio de la Estación', 1),
-('AAG000004', 'Ana Torres', 'Calle 5 de Febrero', 'El Llano', 1),
-('AAG000005', 'Lucía Martínez', 'Calle Juárez', 'Norias de Ojocaliente', 1),
-('AAG000006', 'Jorge Fernández', 'Calle Allende', 'San Antonio de los Horcones', 1),
-('AAG000007', 'Sofía Hernández', 'Calle Madero', 'La Soledad', 1),
-('AAG000008', 'Carlos Ruiz', 'Calle Morelos', 'Cañada Honda', 1),
-('AAG000009', 'Elena Castro', 'Calle Lázaro Cárdenas', 'Salto de los Salado', 1),
-('AAG000010', 'Fernando Gómez', 'Calle Independencia', 'Villa Montaña', 1),
-('AAG000011', 'Mariana Vega', 'Calle Zaragoza', 'La Soledad', 1),
-('AAG000012', 'Pablo Mendoza', 'Calle 16 de Septiembre', 'El Llano', 1),
+('AAG000004', 'Ana Torres', 'Calle 5 de Febrero', 'El Llano', 29),
+('AAG000005', 'Lucía Martínez', 'Calle Juárez', 'Norias de Ojocaliente', 5),
+('AAG000006', 'Jorge Fernández', 'Calle Allende', 'San Antonio de los Horcones', 8),
+('AAG000007', 'Sofía Hernández', 'Calle Madero', 'La Soledad', 4),
+('AAG000008', 'Carlos Ruiz', 'Calle Morelos', 'Cañada Honda', 21),
+('AAG000009', 'Elena Castro', 'Calle Lázaro Cárdenas', 'Salto de los Salado', 21),
+('AAG000010', 'Fernando Gómez', 'Calle Independencia', 'Villa Montaña', 9),
+('AAG0000101', 'Estefeen Sandoval', 'Penuelas', 'Norias de Ojocaliente', 5),
+('AAG000011', 'Mariana Vega', 'Calle Zaragoza', 'La Soledad', 4),
+('AAG000012', 'Pablo Mendoza', 'Calle 16 de Septiembre', 'El Llano', 29),
 ('AAG000013', 'Laura Herrera', 'Calle Santa María', 'Barrio de la Estación', 1),
-('AAG000014', 'Arturo Ramírez', 'Calle San Carlos', 'Cañada Honda', 1),
-('AAG000015', 'Valentina Cruz', 'Calle 28 de Agosto', 'Salto de los Salado', 1),
-('AAG000016', 'Eduardo Castro', 'Calle Santiago', 'Norias de Ojocaliente', 1),
-('AAG000017', 'Patricia Torres', 'Calle Emiliano Zapata', 'San Antonio de los Horcones', 1),
-('AAG000018', 'Felipe Rojas', 'Calle del Agua', 'La Soledad', 1),
-('AAG000019', 'Carmen Aguilar', 'Calle Los Ángeles', 'Villa Montaña', 1),
-('AAG000020', 'Hugo Salinas', 'Calle La Paz', 'Zona Centro', 1),
-('AAG000021', 'Andrea Méndez', 'Calle Melchor Múzquiz', 'El Llano', 1),
+('AAG000014', 'Arturo Ramírez', 'Calle San Carlos', 'Cañada Honda', 21),
+('AAG000015', 'Valentina Cruz', 'Calle 28 de Agosto', 'Salto de los Salado', 21),
+('AAG000016', 'Eduardo Castro', 'Calle Santiago', 'Norias de Ojocaliente', 5),
+('AAG000017', 'Patricia Torres', 'Calle Emiliano Zapata', 'San Antonio de los Horcones', 8),
+('AAG000018', 'Felipe Rojas', 'Calle del Agua', 'La Soledad', 4),
+('AAG000019', 'Carmen Aguilar', 'Calle Los Ángeles', 'Villa Montaña', 9),
+('AAG000020', 'Hugo Salinas', 'Calle La Paz', 'Zona Centro', 10),
+('AAG000021', 'Andrea Méndez', 'Calle Melchor Múzquiz', 'El Llano', 29),
 ('AAG000022', 'Rafael Domínguez', 'Calle Las Flores', 'Barrio de la Estación', 1),
-('AAG000023', 'Teresa Orozco', 'Calle El Mirador', 'Cañada Honda', 1),
-('AAG000024', 'Ignacio Fernández', 'Calle de la Libertad', 'Salto de los Salado', 1),
-('AAG000025', 'Liliana Silva', 'Calle Las Torres', 'Norias de Ojocaliente', 1),
-('AAG000026', 'Raúl Díaz', 'Calle Jardín', 'San Antonio de los Horcones', 1),
-('AAG000027', 'Inés Ortega', 'Calle del Sol', 'La Soledad', 1),
-('AAG000028', 'Gabriel León', 'Calle San Francisco', 'Villa Montaña', 1),
-('AAG000029', 'Martín Castro', 'Calle Río Nazas', 'Zona Centro', 1),
-('AAG000030', 'Rosa García', 'Calle Constitución', 'El Llano', 1),
+('AAG000023', 'Teresa Orozco', 'Calle El Mirador', 'Cañada Honda', 21),
+('AAG000024', 'Ignacio Fernández', 'Calle de la Libertad', 'Salto de los Salado', 21),
+('AAG000025', 'Liliana Silva', 'Calle Las Torres', 'Norias de Ojocaliente', 5),
+('AAG000026', 'Raúl Díaz', 'Calle Jardín', 'San Antonio de los Horcones', 8),
+('AAG000027', 'Inés Ortega', 'Calle del Sol', 'La Soledad', 4),
+('AAG000028', 'Gabriel León', 'Calle San Francisco', 'Villa Montaña', 9),
+('AAG000029', 'Martín Castro', 'Calle Río Nazas', 'Zona Centro', 10),
+('AAG000030', 'Rosa García', 'Calle Constitución', 'El Llano', 29),
 ('AAG000031', 'Victor López', 'Calle Nueva España', 'Barrio de la Estación', 1),
-('AAG000032', 'Esteban Morales', 'Calle de la Paz', 'Cañada Honda', 1),
-('AAG000033', 'Claudia Hernández', 'Calle San Pedro', 'Salto de los Salado', 1),
-('AAG000034', 'Mónica Pérez', 'Calle Las Flores', 'Norias de Ojocaliente', 1),
-('AAG000035', 'Samuel Martínez', 'Calle Del Bosque', 'San Antonio de los Horcones', 1),
-('AAG000036', 'Yolanda Romero', 'Calle de la Rosa', 'La Soledad', 1),
-('AAG000037', 'Ángel Herrera', 'Calle Las Palomas', 'Villa Montaña', 1),
-('AAG000038', 'Silvia Morales', 'Calle Pino', 'Zona Centro', 1),
-('AAG000039', 'Luis Fernández', 'Calle del Tigre', 'El Llano', 1),
+('AAG000032', 'Esteban Morales', 'Calle de la Paz', 'Cañada Honda', 21),
+('AAG000033', 'Claudia Hernández', 'Calle San Pedro', 'Salto de los Salado', 21),
+('AAG000034', 'Mónica Pérez', 'Calle Las Flores', 'Norias de Ojocaliente', 5),
+('AAG000035', 'Samuel Martínez', 'Calle Del Bosque', 'San Antonio de los Horcones', 8),
+('AAG000036', 'Yolanda Romero', 'Calle de la Rosa', 'La Soledad', 4),
+('AAG000037', 'Ángel Herrera', 'Calle Las Palomas', 'Villa Montaña', 9),
+('AAG000038', 'Silvia Morales', 'Calle Pino', 'Zona Centro', 10),
+('AAG000039', 'Luis Fernández', 'Calle del Tigre', 'El Llano', 29),
 ('AAG000040', 'Sandra Ruiz', 'Calle Colón', 'Barrio de la Estación', 1),
-('AAG000041', 'Arturo Sánchez', 'Calle de la Libertad', 'Cañada Honda', 1),
-('AAG000042', 'Verónica Vargas', 'Calle Juárez', 'Salto de los Salado', 1),
-('AAG000043', 'Omar Salazar', 'Calle Vicente Guerrero', 'Norias de Ojocaliente', 1),
-('AAG000044', 'Nora Castro', 'Calle Santa Clara', 'San Antonio de los Horcones', 1),
-('AAG000045', 'Daniel Torres', 'Calle El Cielo', 'La Soledad', 1),
-('AAG000046', 'Gabriela Mendoza', 'Calle La Paz', 'Villa Montaña', 1),
-('AAG000047', 'Emanuel Rojas', 'Calle Las Estrellas', 'Zona Centro', 1),
-('AAG000048', 'Patricia Álvarez', 'Calle Lira', 'El Llano', 1),
+('AAG000041', 'Arturo Sánchez', 'Calle de la Libertad', 'Cañada Honda', 21),
+('AAG000042', 'Verónica Vargas', 'Calle Juárez', 'Salto de los Salado', 21),
+('AAG000043', 'Omar Salazar', 'Calle Vicente Guerrero', 'Norias de Ojocaliente', 5),
+('AAG000044', 'Nora Castro', 'Calle Santa Clara', 'San Antonio de los Horcones', 8),
+('AAG000045', 'Daniel Torres', 'Calle El Cielo', 'La Soledad', 4),
+('AAG000046', 'Gabriela Mendoza', 'Calle La Paz', 'Villa Montaña', 9),
+('AAG000047', 'Emanuel Rojas', 'Calle Las Estrellas', 'Zona Centro', 10),
+('AAG000048', 'Patricia Álvarez', 'Calle Lira', 'El Llano', 29),
 ('AAG000049', 'Rafael Castro', 'Calle de las Flores', 'Barrio de la Estación', 1),
-('AAG000050', 'Diego Delgado', 'Calle Lázaro Cárdenas', 'Cañada Honda', 1),
+('AAG000050', 'Diego Delgado', 'Calle Lázaro Cárdenas', 'Cañada Honda', 21),
+('AAG000102', 'Frida Escamilla', 'David Flores', 'Zona Centro', 10),
 ('AS000051', 'Diego Silva', 'Calle Candelaria', 'San Gil', 11),
 ('AS000052', 'Martha González', 'Calle 5 de Febrero', 'Las Negritas', 11),
 ('AS000053', 'Felipe Martínez', 'Calle del Sol', 'Bajío de San José', 11),
 ('AS000054', 'Elisa Torres', 'Calle La Libertad', 'El Cañón', 11),
 ('AS000055', 'Alberto Ruiz', 'Calle San Andrés', 'El Ranchito', 11),
 ('CA000056', 'Rosa Delgado', 'Calle Los Molinos', 'El Rodeo', 18),
-('CA000057', 'Julio Ortega', 'Calle San Miguel', 'La Labor', 18),
+('CA000057', 'Julio Ortega', 'Calle San Miguel', 'La Labor', 19),
 ('CA000058', 'Leticia Ramos', 'Calle Huertas', 'Ojocaliente', 18),
 ('CA000059', 'Rodolfo Martínez', 'Calle Libertad', 'Malpaso', 18),
 ('CA000060', 'Irma Fernández', 'Calle del Águila', 'Presa de los Serna', 18),
@@ -245,7 +219,7 @@ INSERT INTO `cliente` (`RFC_Cte`, `Nombre_Cte`, `Calle`, `Colonia`, `LocalidadID
 -- --------------------------------------------------------
 
 --
--- Table structure for table `envio`
+-- Estructura de tabla para la tabla `envio`
 --
 
 CREATE TABLE `envio` (
@@ -259,10 +233,11 @@ CREATE TABLE `envio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `envio`
+-- Volcado de datos para la tabla `envio`
 --
 
 INSERT INTO `envio` (`ID_Envio`, `FechaSalida`, `FechaLlegada`, `Metodo_Envio`, `Costo_Envio`, `Estado_Envio`, `Direccion_Envio`) VALUES
+(0, '2024-12-02', '2024-12-05', 'UPS', 200.00, 'En tránsito', 'Calle Morelos 654, Morelia, Michoacán'),
 (1, '2024-11-01', '2024-11-03', 'FedEx', 120.50, 'Pendiente', 'Calle de Durango 123, Cuauhtémoc, Ciudad de México'),
 (2, '2024-11-02', '2024-11-04', 'DHL', 130.75, 'Entregado', 'Calle 5 de Febrero 456, León, Guanajuato'),
 (3, '2024-11-03', '2024-11-05', 'UPS', 115.00, 'En tránsito', 'Calle Juárez 789, Puebla, Puebla'),
@@ -302,12 +277,27 @@ INSERT INTO `envio` (`ID_Envio`, `FechaSalida`, `FechaLlegada`, `Metodo_Envio`, 
 (37, '2024-12-07', '2024-12-09', 'FedEx', 405.00, 'Entregado', 'Calle 7 de enero 2323, Tlaxcala, Tlaxcala'),
 (38, '2024-12-08', '2024-12-10', 'DHL', 415.00, 'Pendiente', 'Calle de San Pedro 2424, Ciudad de México'),
 (39, '2024-12-09', '2024-12-11', 'UPS', 425.00, 'En tránsito', 'Calle San Sebastián 2525, León, Guanajuato'),
-(40, '2024-12-10', '2024-12-12', 'Correos', 435.00, 'Entregado', 'Avenida de los Insurgentes 2626, Aguascalientes, Aguascalientes');
+(40, '2024-12-10', '2024-12-12', 'Correos', 435.00, 'Entregado', 'Avenida de los Insurgentes 2626, Aguascalientes, Aguascalientes'),
+(41, '2024-12-03', '2024-12-06', 'UPS', 250.00, 'En tránsito', 'Avenida Chapultepec 321, Guadalajara, Jalisco'),
+(42, '2024-12-03', '2024-12-06', 'UPS', 250.00, 'En tránsito', 'Calle Falsa 123, Ciudad Ejemplo'),
+(43, '2024-12-06', '2024-12-10', 'DHL', 450.00, 'En tránsito', 'Avenida Paseo de la Reforma 1111, Ciudad de México'),
+(44, '2024-12-06', '2024-12-10', 'DHL', 450.00, 'En tránsito', 'Calle Goya 909, Tlaxcala, Tlaxcala'),
+(45, '2024-12-06', '2024-12-10', 'DHL', 450.00, 'En tránsito', 'Calle Faja de Oro 606, Guadalajara, Jalisco'),
+(46, '2024-12-06', '2024-12-10', 'DHL', 450.00, 'En tránsito', 'Calle Matamoros 505, Ciudad Juárez, Chihuahua'),
+(47, '2024-12-02', '2024-12-05', 'FedEx', 200.00, 'En tránsito', 'Avenida de los Insurgentes 808, México, D.F.'),
+(48, '2024-12-02', '2024-12-05', 'Correos', 200.00, 'En tránsito', 'Calle Hidalgo 1212, Aguascalientes, Aguascalientes'),
+(49, '2024-12-02', '2024-12-05', 'DHL', 200.00, 'En tránsito', 'Calle Falsa 123, Ciudad Ejemplo'),
+(50, '2024-12-03', '2024-12-04', 'UPS', 200.00, 'Pendiente', 'Calle Las Flores 1919, Oaxaca, Oaxaca'),
+(51, '2024-12-03', '2024-12-04', 'UPS', 200.00, 'Pendiente', 'Avenida 5 de Febrero 1818, Guanajuato, Guanajuato'),
+(52, '2024-12-04', '2024-12-07', 'Fedex', 200.00, 'Pendiente', 'Calle de los Reyes 2121, Monterrey, Nuevo León'),
+(53, '2024-12-03', '2024-12-06', 'UPS', 300.00, 'Pendiente', 'Calle Santa Ana 303, Campeche, Campeche'),
+(54, '2024-12-03', '2024-12-06', 'UPS', 300.00, 'Pendiente', 'Calle Puebla 202, Mérida, Yucatán'),
+(55, '2024-12-09', '2024-12-23', 'DHL', 120.00, 'Pendiente', 'Calle Puebla 202, Mérida, Yucatán');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `estado`
+-- Estructura de tabla para la tabla `estado`
 --
 
 CREATE TABLE `estado` (
@@ -316,7 +306,7 @@ CREATE TABLE `estado` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `estado`
+-- Volcado de datos para la tabla `estado`
 --
 
 INSERT INTO `estado` (`ID_Estado`, `Nombre_Estado`) VALUES
@@ -356,7 +346,7 @@ INSERT INTO `estado` (`ID_Estado`, `Nombre_Estado`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `factura`
+-- Estructura de tabla para la tabla `factura`
 --
 
 CREATE TABLE `factura` (
@@ -372,55 +362,71 @@ CREATE TABLE `factura` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `factura`
+-- Volcado de datos para la tabla `factura`
 --
 
 INSERT INTO `factura` (`Folio_Factura`, `Fecha_Creada`, `Subtotal`, `Impuesto`, `Total`, `Tipo`, `EnvioID`, `ProveedorID`, `ClienteRFC`) VALUES
 (1, '2024-11-01', 2500.00, 400.00, 2900.00, 'Venta', 1, 1, 'AAG000001'),
-(2, '2024-11-02', 3000.00, 480.00, 3480.00, 'Venta', 2, 1, 'AAG000002'),
-(3, '2024-11-03', 1500.00, 240.00, 1740.00, 'Venta', 3, 1, 'AAG000003'),
-(4, '2024-11-04', 2000.00, 320.00, 2320.00, 'Venta', 4, 1, 'AAG000004'),
-(5, '2024-11-05', 3500.00, 560.00, 4060.00, 'Venta', 5, 1, 'AAG000005'),
-(6, '2024-11-06', 4200.00, 672.00, 4872.00, 'Venta', 6, 1, 'AAG000006'),
-(7, '2024-11-07', 2900.00, 464.00, 3364.00, 'Venta', 7, 1, 'AAG000007'),
-(8, '2024-11-08', 1800.00, 288.00, 2088.00, 'Venta', 8, 1, 'AAG000008'),
-(9, '2024-11-09', 3200.00, 512.00, 3712.00, 'Venta', 9, 1, 'AAG000009'),
-(10, '2024-11-10', 4000.00, 640.00, 4640.00, 'Venta', 10, 1, 'AAG000010'),
+(2, '2024-11-02', 3000.00, 480.00, 3480.00, 'Venta', 2, 13, 'AAG000002'),
+(3, '2024-11-03', 1500.00, 240.00, 1740.00, 'Venta', 3, 2, 'AAG000003'),
+(4, '2024-11-04', 2000.00, 320.00, 2320.00, 'Venta', 4, 7, 'AAG000004'),
+(5, '2024-11-05', 3500.00, 560.00, 4060.00, 'Venta', 5, 12, 'AAG000005'),
+(6, '2024-11-06', 4200.00, 672.00, 4872.00, 'Venta', 6, 5, 'AAG000006'),
+(7, '2024-11-07', 2900.00, 464.00, 3364.00, 'Venta', 7, 25, 'AAG000007'),
+(8, '2024-11-08', 1800.00, 288.00, 2088.00, 'Venta', 8, 17, 'AAG000008'),
+(9, '2024-11-09', 3200.00, 512.00, 3712.00, 'Venta', 9, 24, 'AAG000009'),
+(10, '2024-11-10', 4000.00, 640.00, 4640.00, 'Venta', 10, 2, 'AAG000010'),
 (11, '2024-11-11', 2700.00, 432.00, 3132.00, 'Venta', 11, 1, 'AAG000011'),
-(12, '2024-11-12', 2300.00, 368.00, 2668.00, 'Venta', 12, 1, 'AAG000012'),
-(13, '2024-11-13', 3100.00, 496.00, 3596.00, 'Venta', 13, 1, 'AAG000013'),
-(14, '2024-11-14', 2500.00, 400.00, 2900.00, 'Venta', 14, 1, 'AAG000014'),
-(15, '2024-11-15', 1900.00, 304.00, 2204.00, 'Venta', 15, 1, 'AAG000015'),
-(16, '2024-11-16', 1700.00, 272.00, 1972.00, 'Venta', 16, 1, 'AAG000016'),
-(17, '2024-11-17', 3300.00, 528.00, 3828.00, 'Venta', 17, 1, 'AAG000017'),
-(18, '2024-11-18', 1500.00, 240.00, 1740.00, 'Venta', 18, 1, 'AAG000018'),
-(19, '2024-11-19', 2800.00, 448.00, 3248.00, 'Venta', 19, 1, 'AAG000019'),
-(20, '2024-11-20', 3100.00, 496.00, 3596.00, 'Venta', 20, 1, 'AAG000020'),
-(21, '2024-11-21', 2400.00, 384.00, 2784.00, 'Venta', 21, 1, 'AAG000021'),
-(22, '2024-11-22', 1800.00, 288.00, 2088.00, 'Venta', 22, 1, 'AAG000022'),
-(23, '2024-11-23', 2900.00, 464.00, 3364.00, 'Venta', 23, 1, 'AAG000023'),
-(24, '2024-11-24', 2500.00, 400.00, 2900.00, 'Venta', 24, 1, 'AAG000024'),
-(25, '2024-11-25', 3000.00, 480.00, 3480.00, 'Venta', 25, 1, 'AAG000025'),
-(26, '2024-11-26', 3500.00, 560.00, 4060.00, 'Venta', 26, 1, 'AAG000026'),
-(27, '2024-11-27', 1800.00, 288.00, 2088.00, 'Venta', 27, 1, 'AAG000027'),
-(28, '2024-11-28', 3200.00, 512.00, 3712.00, 'Venta', 28, 1, 'AAG000028'),
-(29, '2024-11-29', 2800.00, 448.00, 3248.00, 'Venta', 29, 1, 'AAG000029'),
-(30, '2024-11-30', 3000.00, 480.00, 3480.00, 'Venta', 30, 1, 'AAG000030'),
-(31, '2024-12-01', 3100.00, 496.00, 3596.00, 'Venta', 31, 1, 'AAG000031'),
-(32, '2024-12-02', 2000.00, 320.00, 2320.00, 'Venta', 32, 1, 'AAG000032'),
-(33, '2024-12-03', 2300.00, 368.00, 2668.00, 'Venta', 33, 1, 'AAG000033'),
-(34, '2024-12-04', 2500.00, 400.00, 2900.00, 'Venta', 34, 1, 'AAG000034'),
-(35, '2024-12-05', 1900.00, 304.00, 2204.00, 'Venta', 35, 1, 'AAG000035'),
-(36, '2024-12-06', 1500.00, 240.00, 1740.00, 'Venta', 36, 1, 'AAG000036'),
-(37, '2024-12-07', 4200.00, 672.00, 4872.00, 'Venta', 37, 1, 'AAG000037'),
-(38, '2024-12-08', 1800.00, 288.00, 2088.00, 'Venta', 38, 1, 'AAG000038'),
-(39, '2024-12-09', 2500.00, 400.00, 2900.00, 'Venta', 39, 1, 'AAG000039'),
-(40, '2024-12-10', 2700.00, 432.00, 3132.00, 'Venta', 40, 1, 'AAG000040');
+(12, '2024-11-12', 2300.00, 368.00, 2668.00, 'Venta', 12, 5, 'AAG000012'),
+(13, '2024-11-13', 3100.00, 496.00, 3596.00, 'Venta', 13, 6, 'AAG000013'),
+(14, '2024-11-14', 2500.00, 400.00, 2900.00, 'Venta', 14, 3, 'AAG000014'),
+(15, '2024-11-15', 1900.00, 304.00, 2204.00, 'Venta', 15, 9, 'AAG000015'),
+(16, '2024-11-16', 1700.00, 272.00, 1972.00, 'Venta', 16, 3, 'AAG000016'),
+(17, '2024-11-17', 3300.00, 528.00, 3828.00, 'Venta', 17, 12, 'AAG000017'),
+(18, '2024-11-18', 1500.00, 240.00, 1740.00, 'Venta', 18, 10, 'AAG000018'),
+(19, '2024-11-19', 2800.00, 448.00, 3248.00, 'Venta', 19, 19, 'AAG000019'),
+(20, '2024-11-20', 3100.00, 496.00, 3596.00, 'Venta', 20, 19, 'AAG000020'),
+(21, '2024-11-21', 2400.00, 384.00, 2784.00, 'Venta', 21, 12, 'AAG000021'),
+(22, '2024-11-22', 1800.00, 288.00, 2088.00, 'Venta', 22, 24, 'AAG000022'),
+(23, '2024-11-23', 2900.00, 464.00, 3364.00, 'Venta', 23, 4, 'AAG000023'),
+(24, '2024-11-24', 2500.00, 400.00, 2900.00, 'Venta', 24, 8, 'AAG000024'),
+(25, '2024-11-25', 3000.00, 480.00, 3480.00, 'Venta', 25, 13, 'AAG000025'),
+(26, '2024-11-26', 3500.00, 560.00, 4060.00, 'Venta', 26, 23, 'AAG000026'),
+(27, '2024-11-27', 1800.00, 288.00, 2088.00, 'Venta', 27, 15, 'AAG000027'),
+(28, '2024-11-28', 3200.00, 512.00, 3712.00, 'Venta', 28, 5, 'AAG000028'),
+(29, '2024-11-29', 2800.00, 448.00, 3248.00, 'Venta', 29, 17, 'AAG000029'),
+(30, '2024-11-30', 3000.00, 480.00, 3480.00, 'Venta', 30, 9, 'AAG000030'),
+(31, '2024-12-01', 3100.00, 496.00, 3596.00, 'Venta', 31, 25, 'AAG000031'),
+(32, '2024-12-02', 2000.00, 320.00, 2320.00, 'Venta', 32, 8, 'AAG000032'),
+(33, '2024-12-03', 2300.00, 368.00, 2668.00, 'Venta', 33, 10, 'AAG000033'),
+(34, '2024-12-04', 2500.00, 400.00, 2900.00, 'Venta', 34, 7, 'AAG000034'),
+(35, '2024-12-05', 1900.00, 304.00, 2204.00, 'Venta', 35, 26, 'AAG000035'),
+(36, '2024-12-06', 1500.00, 240.00, 1740.00, 'Venta', 36, 7, 'AAG000036'),
+(37, '2024-12-07', 4200.00, 672.00, 4872.00, 'Venta', 37, 3, 'AAG000037'),
+(38, '2024-12-08', 1800.00, 288.00, 2088.00, 'Venta', 38, 7, 'AAG000038'),
+(39, '2024-12-09', 2500.00, 400.00, 2900.00, 'Venta', 39, 21, 'AAG000039'),
+(40, '2024-12-10', 2700.00, 432.00, 3132.00, 'Venta', 40, 1, 'AAG000040'),
+(41, '2024-12-01', 1000.00, 160.00, 1160.00, 'Venta', 0, 23, 'AAG0000101'),
+(42, '2024-12-02', 3000.00, 160.00, 1160.00, 'Venta', 41, 18, 'AAG0000101'),
+(43, '2024-12-02', 3000.00, 160.00, 1160.00, 'Venta', 42, 16, 'AAG0000101'),
+(44, '2024-12-02', 6000.00, 160.00, 1160.00, 'Venta', 43, 13, 'AAG0000101'),
+(45, '2024-12-02', 3000.00, 160.00, 1160.00, 'Venta', 44, 11, 'AAG0000101'),
+(46, '2024-12-02', 3500.00, 160.00, 1160.00, 'Venta', 45, 24, 'AAG0000101'),
+(47, '2024-12-02', 4500.00, 160.00, 1160.00, 'Venta', 46, 19, 'AAG0000101'),
+(48, '2024-12-02', 3000.00, 160.00, 1160.00, 'Venta', 47, 4, 'AAG0000101'),
+(50, '2024-12-02', 3000.00, 160.00, 1160.00, 'Venta', 48, 15, 'AAG0000101'),
+(51, '2024-12-02', 2920.00, 467.20, 3387.20, 'Venta', 49, 14, 'AAG0000101'),
+(52, '2024-12-02', 2920.00, 467.20, 3387.20, 'Venta', 50, 1, 'AAG0000101'),
+(53, '2024-12-02', 62169.00, 9947.04, 72116.04, 'Venta', 51, 2, 'AAG0000101'),
+(54, '2024-12-03', 7067.00, 1130.72, 8197.72, 'venta', 52, 3, 'AAG0000101'),
+(55, '2024-12-03', 17900.00, 2864.00, 20764.00, 'venta', 53, 7, 'AAG000102'),
+(56, '2024-12-03', 26570.00, 4251.20, 30821.20, 'venta', 54, 7, 'AAG000102'),
+(57, '2024-12-03', 8740.00, 1398.40, 10138.40, 'venta', 55, 8, 'AAG000102');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `factura_producto`
+-- Estructura de tabla para la tabla `factura_producto`
 --
 
 CREATE TABLE `factura_producto` (
@@ -430,7 +436,7 @@ CREATE TABLE `factura_producto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `factura_producto`
+-- Volcado de datos para la tabla `factura_producto`
 --
 
 INSERT INTO `factura_producto` (`FacturaFolio`, `ProductoID`, `Cantidad`) VALUES
@@ -481,26 +487,29 @@ INSERT INTO `factura_producto` (`FacturaFolio`, `ProductoID`, `Cantidad`) VALUES
 (23, 15, 5),
 (23, 16, 2),
 (24, 17, 1),
-(24, 18, 3);
+(24, 18, 3),
+(41, 23, 1),
+(41, 25, 1),
+(42, 23, 3),
+(43, 23, 3),
+(44, 10, 4),
+(45, 10, 2),
+(46, 10, 2),
+(47, 10, 2),
+(48, 1, 4),
+(50, 1, 4),
+(51, 1, 1),
+(52, 1, 1),
+(53, 5, 3),
+(54, 20, 1),
+(55, 8, 2),
+(56, 4, 2),
+(57, 12, 1);
 
 -- --------------------------------------------------------
 
 --
--- Stand-in structure for view `favprods`
--- (See below for the actual view)
---
-CREATE TABLE `favprods` (
-`Nombre_Cte` varchar(50)
-,`RFC_Cte` varchar(50)
-,`ProductoID` int(11)
-,`Nombre_Prod` varchar(40)
-,`TotalQuantity` decimal(32,0)
-);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `localidad`
+-- Estructura de tabla para la tabla `localidad`
 --
 
 CREATE TABLE `localidad` (
@@ -510,7 +519,7 @@ CREATE TABLE `localidad` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `localidad`
+-- Volcado de datos para la tabla `localidad`
 --
 
 INSERT INTO `localidad` (`ID_Localidad`, `Nombre_Localidad`, `MunicipioID`) VALUES
@@ -592,7 +601,7 @@ INSERT INTO `localidad` (`ID_Localidad`, `Nombre_Localidad`, `MunicipioID`) VALU
 -- --------------------------------------------------------
 
 --
--- Table structure for table `municipio`
+-- Estructura de tabla para la tabla `municipio`
 --
 
 CREATE TABLE `municipio` (
@@ -602,7 +611,7 @@ CREATE TABLE `municipio` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `municipio`
+-- Volcado de datos para la tabla `municipio`
 --
 
 INSERT INTO `municipio` (`ID_Municipio`, `Nombre_Municipio`, `EstadoID`) VALUES
@@ -690,7 +699,7 @@ INSERT INTO `municipio` (`ID_Municipio`, `Nombre_Municipio`, `EstadoID`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `producto`
+-- Estructura de tabla para la tabla `producto`
 --
 
 CREATE TABLE `producto` (
@@ -704,22 +713,22 @@ CREATE TABLE `producto` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `producto`
+-- Volcado de datos para la tabla `producto`
 --
 
 INSERT INTO `producto` (`ID_Prod`, `Nombre_Prod`, `Descripcion_Prod`, `Cantidad_Prod`, `PrecioUnit_Prod`, `Descuento_Prod`, `Imagen_Prod`) VALUES
 (1, 'adidas tenis Gazelle Indoor', 'Earth Strata/Cloud White/Magic Beige - 25% extra', 50, 2920.00, 730.00, 'adidas_gazelle.jpg'),
 (2, 'Onitsuka Tiger tenis Mexico 66', 'Cream Mineral - Elección responsable', 30, 8809.00, 0.00, 'onitsuka_mexico66.jpg'),
 (3, 'Jordan tenis Air Jordan 1', 'Low OG Velvet Brown de JORDAN x Travis Scott', 20, 25330.00, 0.00, 'jordan_airjordan1.jpg'),
-(4, 'AMIRI tenis Pacific', 'Nueva temporada', 25, 13285.00, 0.00, 'amiri_pacific.jpg'),
-(5, 'Balenciaga tenis Track', 'Nueva temporada', 15, 20723.00, 0.00, 'balenciaga_track.jpg'),
+(4, 'AMIRI tenis Pacific', 'Nueva temporada', 23, 13285.00, 0.00, 'amiri_pacific.jpg'),
+(5, 'Balenciaga tenis Track', 'Nueva temporada', 12, 20723.00, 0.00, 'balenciaga_track.jpg'),
 (6, 'MM6 Maison Margiela tenis XT-Mary', 'de x Salomon', 10, 6365.00, 1591.25, 'mm6_xtmary.jpg'),
 (7, 'ASICS tenis Gel-Sonoma 15-50', '-25% extra - Elección responsable', 40, 3452.00, 863.00, 'asics_gel_sonoma.jpg'),
-(8, 'Comme des Garçons Hombre Plus tenis Air ', 'de Comme des Garçons Homme Plus x Nike', 12, 8950.00, 0.00, 'cdg_airmax.jpg'),
+(8, 'Comme des Garçons Hombre Plus tenis Air ', 'de Comme des Garçons Homme Plus x Nike', 10, 8950.00, 0.00, 'cdg_airmax.jpg'),
 (9, 'Nike tenis Dunk Low Retro', 'Quickstrike - Elección responsable', 35, 3549.00, 0.00, 'nike_dunk_low.jpg'),
 (10, 'Zegna tenis Triple Stitch', '', 22, 25755.00, 0.00, 'zegna_triple_stitch.jpg'),
 (11, 'adidas tenis Samba College', 'Navy de adidas x Alwayth', 18, 9262.00, 0.00, 'adidas_samba_navy.jpg'),
-(12, 'Maison MIHARA YASUHIRO tenis Peterson23 ', '-25% extra', 28, 8740.00, 2185.00, 'maison_peterson23.jpg'),
+(12, 'Maison MIHARA YASUHIRO tenis Peterson23 ', '-25% extra', 27, 8740.00, 2185.00, 'maison_peterson23.jpg'),
 (13, 'New Balance tenis 1000', 'Pink - Elección responsable', 55, 5121.00, 0.00, 'newbalance_1000.jpg'),
 (14, 'Lanvin tenis Curb', '-25% extra', 5, 26556.00, 6639.00, 'lanvin_curb.jpg'),
 (15, 'Balenciaga tenis Stapler', 'Elección responsable', 40, 20796.00, 0.00, 'balenciaga_stapler.jpg'),
@@ -727,7 +736,7 @@ INSERT INTO `producto` (`ID_Prod`, `Nombre_Prod`, `Descripcion_Prod`, `Cantidad_
 (17, 'Maison MIHARA YASUHIRO tenis Keith', '-25% extra', 7, 10111.00, 2527.75, 'maison_keith.jpg'),
 (18, 'Fear Of God tenis Moc Runner', '-25% extra', 9, 19835.00, 4958.75, 'fear_of_god_moc.jpg'),
 (19, 'adidas tenis Samba College', 'Burgundy de adidas x ALWAYTH', 15, 10381.00, 0.00, 'adidas_samba_burgundy.jpg'),
-(20, 'Saucony tenis ProGrid Omni 9', 'Jae Tips To Do List Tan', 20, 7067.00, 0.00, 'saucony_progrid.jpg'),
+(20, 'Saucony tenis ProGrid Omni 9', 'Jae Tips To Do List Tan', 19, 7067.00, 0.00, 'saucony_progrid.jpg'),
 (21, 'New Balance tenis 1906L', 'Silver - Nueva temporada', 30, 10541.00, 0.00, 'newbalance_1906l.jpg'),
 (22, 'ASICS tenis GEL-Kayano 20', 'Bodega Small Wins Add Up - Elección responsable', 12, 6027.00, 0.00, 'asics_gel_kayano.jpg'),
 (23, 'Salomon tenis ACS Pro GTX', '-25% extra - Elección responsable', 5, 5345.00, 1336.25, 'salomon_acs_pro.jpg'),
@@ -742,7 +751,7 @@ INSERT INTO `producto` (`ID_Prod`, `Nombre_Prod`, `Descripcion_Prod`, `Cantidad_
 -- --------------------------------------------------------
 
 --
--- Table structure for table `proveedor`
+-- Estructura de tabla para la tabla `proveedor`
 --
 
 CREATE TABLE `proveedor` (
@@ -759,7 +768,7 @@ CREATE TABLE `proveedor` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `proveedor`
+-- Volcado de datos para la tabla `proveedor`
 --
 
 INSERT INTO `proveedor` (`ID_Prov`, `Nombre_Prov`, `Contacto_Prov`, `Telefono_Prov`, `Email_Prov`, `Direccion_Prov`, `Ciudad_Prov`, `Pais_Prov`, `Imagen_Prov`, `LocalidadID`) VALUES
@@ -791,53 +800,33 @@ INSERT INTO `proveedor` (`ID_Prov`, `Nombre_Prov`, `Contacto_Prov`, `Telefono_Pr
 (26, 'Proveedores San Francisco', 'Patricia Ramírez', '472-678-9012', 'contacto@sanfrancisco.com', 'Calle Zaragoza 234', 'San Francisco de los Romo', 'México', 'prov26.jpg', 9),
 (27, 'Comercializadora San Francisco', 'Francisco García', '472-789-0123', 'ventas@comercializadorasfrancisco.com', 'Calle Libertad 567', 'San Francisco de los Romo', 'México', 'prov27.jpg', 9),
 (28, 'Proveedores San José', 'Claudia Pérez', '473-890-1234', 'contacto@sanjose.com', 'Calle Las Flores 890', 'San José de Gracia', 'México', 'prov28.jpg', 10),
-(29, 'Distribuidora San José', 'Roberto Morales', '473-901-2345', 'ventas@distribuidorasanjose.com', 'Calle Lázaro Cárdenas 123', 'San José de Gracia', 'México', 'prov29.jpg', 10),
-(30, 'Proveedores CDMX', 'Fernando Ruiz', '474-012-3456', 'contacto@cdmx.com', 'Paseo de la Reforma 456', 'Ciudad de México', 'México', 'prov30.jpg', 11);
-
--- --------------------------------------------------------
+(32, 'Distribuidores del Centro', 'Estefeen Sandoval', '449-123-5547', 'estefeen_sandoval@gmail.com', 'Calle Ficticia 123, Col. Ejemplo', 'Aguascalientes', 'México', NULL, 1);
 
 --
--- Structure for view `billings`
---
-DROP TABLE IF EXISTS `billings`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `billings`  AS SELECT `p`.`Nombre_Prod` AS `Producto`, `c`.`Nombre_Cte` AS `Cliente`, `l`.`Nombre_Localidad` AS `Region`, sum(`fp`.`Cantidad` * `p`.`PrecioUnit_Prod`) AS `TotalFacturado` FROM ((((`producto` `p` join `factura_producto` `fp` on(`p`.`ID_Prod` = `fp`.`ProductoID`)) join `factura` `f` on(`fp`.`FacturaFolio` = `f`.`Folio_Factura`)) join `cliente` `c` on(`f`.`ClienteRFC` = `c`.`RFC_Cte`)) join `localidad` `l` on(`c`.`LocalidadID` = `l`.`ID_Localidad`)) GROUP BY `p`.`ID_Prod`, `c`.`RFC_Cte`, `l`.`ID_Localidad` ORDER BY sum(`fp`.`Cantidad` * `p`.`PrecioUnit_Prod`) DESC ;
-
--- --------------------------------------------------------
-
---
--- Structure for view `favprods`
---
-DROP TABLE IF EXISTS `favprods`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `favprods`  AS WITH CustomerPurchases AS (SELECT `c`.`Nombre_Cte` AS `Nombre_Cte`, `c`.`RFC_Cte` AS `RFC_Cte`, `fc`.`ProductoID` AS `ProductoID`, `p`.`Nombre_Prod` AS `Nombre_Prod`, sum(`fc`.`Cantidad`) AS `S` FROM (((`cliente` `c` join `factura` `f` on(`c`.`RFC_Cte` = `f`.`ClienteRFC`)) join `factura_producto` `fc` on(`f`.`Folio_Factura` = `fc`.`FacturaFolio`)) join `producto` `p` on(`fc`.`ProductoID` = `p`.`ID_Prod`)) GROUP BY `c`.`Nombre_Cte`, `c`.`RFC_Cte`, `fc`.`ProductoID`, `p`.`Nombre_Prod`), RankedPurchases AS (SELECT `cp`.`Nombre_Cte` AS `Nombre_Cte`, `cp`.`RFC_Cte` AS `RFC_Cte`, `cp`.`ProductoID` AS `ProductoID`, `cp`.`Nombre_Prod` AS `Nombre_Prod`, `cp`.`S` AS `S`, rank() over ( partition by `cp`.`Nombre_Cte`,`cp`.`RFC_Cte` order by `cp`.`S` desc) AS `rnk` FROM `customerpurchases` AS `cp`) SELECT `rankedpurchases`.`Nombre_Cte` AS `Nombre_Cte`, `rankedpurchases`.`RFC_Cte` AS `RFC_Cte`, `rankedpurchases`.`ProductoID` AS `ProductoID`, `rankedpurchases`.`Nombre_Prod` AS `Nombre_Prod`, `rankedpurchases`.`S` AS `TotalQuantity` FROM `rankedpurchases` WHERE `rankedpurchases`.`rnk` = 1 ORDER BY `rankedpurchases`.`S` AS `DESCdesc` ASC  ;
-
---
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `cliente`
+-- Indices de la tabla `cliente`
 --
 ALTER TABLE `cliente`
   ADD PRIMARY KEY (`RFC_Cte`),
-  ADD KEY `LocalidadID` (`LocalidadID`),
-  ADD KEY `idx_name_cliente` (`Nombre_Cte`);
+  ADD KEY `LocalidadID` (`LocalidadID`);
 
 --
--- Indexes for table `envio`
+-- Indices de la tabla `envio`
 --
 ALTER TABLE `envio`
   ADD PRIMARY KEY (`ID_Envio`);
 
 --
--- Indexes for table `estado`
+-- Indices de la tabla `estado`
 --
 ALTER TABLE `estado`
   ADD PRIMARY KEY (`ID_Estado`);
 
 --
--- Indexes for table `factura`
+-- Indices de la tabla `factura`
 --
 ALTER TABLE `factura`
   ADD PRIMARY KEY (`Folio_Factura`),
@@ -846,51 +835,73 @@ ALTER TABLE `factura`
   ADD KEY `ClienteRFC` (`ClienteRFC`);
 
 --
--- Indexes for table `factura_producto`
+-- Indices de la tabla `factura_producto`
 --
 ALTER TABLE `factura_producto`
   ADD PRIMARY KEY (`FacturaFolio`,`ProductoID`),
   ADD KEY `ProductoID` (`ProductoID`);
 
 --
--- Indexes for table `localidad`
+-- Indices de la tabla `localidad`
 --
 ALTER TABLE `localidad`
   ADD PRIMARY KEY (`ID_Localidad`),
   ADD KEY `MunicipioID` (`MunicipioID`);
 
 --
--- Indexes for table `municipio`
+-- Indices de la tabla `municipio`
 --
 ALTER TABLE `municipio`
   ADD PRIMARY KEY (`ID_Municipio`),
   ADD KEY `EstadoID` (`EstadoID`);
 
 --
--- Indexes for table `producto`
+-- Indices de la tabla `producto`
 --
 ALTER TABLE `producto`
   ADD PRIMARY KEY (`ID_Prod`);
 
 --
--- Indexes for table `proveedor`
+-- Indices de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
   ADD PRIMARY KEY (`ID_Prov`),
   ADD KEY `LocalidadID` (`LocalidadID`);
 
 --
--- Constraints for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- Constraints for table `cliente`
+-- AUTO_INCREMENT de la tabla `factura`
+--
+ALTER TABLE `factura`
+  MODIFY `Folio_Factura` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+
+--
+-- AUTO_INCREMENT de la tabla `producto`
+--
+ALTER TABLE `producto`
+  MODIFY `ID_Prod` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT de la tabla `proveedor`
+--
+ALTER TABLE `proveedor`
+  MODIFY `ID_Prov` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `cliente`
 --
 ALTER TABLE `cliente`
   ADD CONSTRAINT `cliente_ibfk_1` FOREIGN KEY (`LocalidadID`) REFERENCES `localidad` (`ID_Localidad`);
 
 --
--- Constraints for table `factura`
+-- Filtros para la tabla `factura`
 --
 ALTER TABLE `factura`
   ADD CONSTRAINT `factura_ibfk_1` FOREIGN KEY (`EnvioID`) REFERENCES `envio` (`ID_Envio`),
@@ -898,26 +909,26 @@ ALTER TABLE `factura`
   ADD CONSTRAINT `factura_ibfk_3` FOREIGN KEY (`ClienteRFC`) REFERENCES `cliente` (`RFC_Cte`);
 
 --
--- Constraints for table `factura_producto`
+-- Filtros para la tabla `factura_producto`
 --
 ALTER TABLE `factura_producto`
   ADD CONSTRAINT `factura_producto_ibfk_1` FOREIGN KEY (`FacturaFolio`) REFERENCES `factura` (`Folio_Factura`),
   ADD CONSTRAINT `factura_producto_ibfk_2` FOREIGN KEY (`ProductoID`) REFERENCES `producto` (`ID_Prod`);
 
 --
--- Constraints for table `localidad`
+-- Filtros para la tabla `localidad`
 --
 ALTER TABLE `localidad`
   ADD CONSTRAINT `localidad_ibfk_1` FOREIGN KEY (`MunicipioID`) REFERENCES `municipio` (`ID_Municipio`);
 
 --
--- Constraints for table `municipio`
+-- Filtros para la tabla `municipio`
 --
 ALTER TABLE `municipio`
   ADD CONSTRAINT `municipio_ibfk_1` FOREIGN KEY (`EstadoID`) REFERENCES `estado` (`ID_Estado`);
 
 --
--- Constraints for table `proveedor`
+-- Filtros para la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
   ADD CONSTRAINT `proveedor_ibfk_1` FOREIGN KEY (`LocalidadID`) REFERENCES `localidad` (`ID_Localidad`);
