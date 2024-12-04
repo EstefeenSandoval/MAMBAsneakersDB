@@ -190,7 +190,7 @@ class Provider {
         JOIN 
             localidad l ON pr.LocalidadID = l.ID_Localidad
         WHERE 
-            l.Nombre_Localidad = 'Centro';
+            l.Nombre_Localidad = 'Centro'
         LIMIT 3;
     `);
     return rows; 

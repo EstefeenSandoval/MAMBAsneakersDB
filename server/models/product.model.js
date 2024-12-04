@@ -32,7 +32,7 @@ class Product {
     `);
     return rows; */
     // Llama al procedimiento almacenado
-    const [rows] = await db.query('CALL TopSellingProducts(()');
+    const [rows] = await db.query('CALL TopSellingProducts()');
     return rows[0]; // El resultado estará en la primera posición del arreglo
     
     } catch (err) {
@@ -103,7 +103,7 @@ class Product {
   static async getBillings() { // Muestra el total facturado por producto, agrupado por cliente y región
     try {
     const [rows] = await db.query(`
-      SELECT * FROM factura;
+      SELECT * FROM billings;
   `);
     return rows; 
     } catch (err) {
