@@ -8,23 +8,23 @@ async function queryOne() {
             const data = await response.json();
             console.log('Datos recibidos:', data);
             // Mostrar la informacion
-            document.getElementById('topThreeBestSellers').innerHTML = data.map((product, index) => `<li class="list-group-item d-flex justify-content-between align-items-start">
+           /*  document.getElementById('topThreeBestSellers').innerHTML = data.map((product, index) => `<li class="list-group-item d-flex justify-content-between align-items-start">
                       <span class="position-number">${index + 1}</span>
                       <div class="ms-2 me-auto">
                         <div class="fw-bold">${product.Product_Name}</div>
                         
                       </div>
                       <span class="badge rounded-pill">${product.Total_Sold}</span>
-                    </li>`);
-                   /*  document.getElementById('topThreeBestSellers').innerHTML = data.map((product, index) => `<li class="list-group-item d-flex justify-content-between align-items-start">
+                    </li>`); */
+                    document.getElementById('topThreeBestSellers').innerHTML = data.map((product, index) => `<li class="list-group-item d-flex justify-content-between align-items-start">
                     <span class="position-number">${index + 1}</span>
                     <div class="ms-2 me-auto">
                       <div class="fw-bold">${product.Product_Name}</div>
-                      Precio: $${product.Precio}
+                      Precio: $${product.Price}
                     </div>
                     <span class="badge rounded-pill">${product.Total_Sold}</span>
-                  <img src="../resources/productos/sneakers/${product.Img}" alt="Imagen ${index + 1}" class="product-image ms-4">
-                  </li>`); */
+                  <img src="../resources/productos/sneakers/${product.Image_Name}" alt="Imagen ${index + 1}" class="product-image ms-4">
+                  </li>`); 
         } else {
             console.log('Error: respuesta no ok');
         }

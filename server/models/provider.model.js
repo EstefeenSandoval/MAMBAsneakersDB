@@ -140,24 +140,12 @@ class Provider {
 
   static async getLowExcistence() { // Ayudar a identificar productos que podrían necesitar reabastecimiento urgente
     try {
-      const [rows] = await db.query(`
-        SELECT 
-            pr.Nombre_Prov AS Proveedor, 
-            p.Nombre_Prod AS Producto, 
-            p.Cantidad_Prod AS Existencias
-        FROM 
-            proveedor pr
-        JOIN 
-            factura f ON pr.ID_Prov = f.ProveedorID
-        JOIN 
-            factura_producto fp ON f.Folio_Factura = fp.FacturaFolio
-        JOIN 
-            producto p ON fp.ProductoID = p.ID_Prod
-        WHERE 
-            p.Cantidad_Prod < 10
-        ORDER BY 
-            p.Cantidad_Prod ASC;
-    `);
+
+
+
+        const [rows] = await db.query(`
+            SELECT * FROM LowExistenceProducts;
+        `);
     return rows; 
     } catch (err) {
       console.error('Error en la consulta getLowExcistence:', err);
