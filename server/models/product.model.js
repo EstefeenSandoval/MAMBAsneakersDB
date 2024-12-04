@@ -12,7 +12,7 @@ class Product {
 
   static async getTopThreeBestSellers() { // Top 5 productos más vendidos - Consulta los productos más vendidos según la cantidad total en todas las facturas
     try {
-      const [rows] = await db.query(`
+      /*const [rows] = await db.query(`
         SELECT 
             p.Nombre_Prod AS Producto, 
             p.PrecioUnit_prod AS Precio,
@@ -30,7 +30,11 @@ class Product {
             CantidadVendida DESC 
         LIMIT 3;
     `);
-    return rows; 
+    return rows; */
+    // Llama al procedimiento almacenado
+    const [rows] = await db.query('CALL TopSellingProducts(()');
+    return rows[0]; // El resultado estará en la primera posición del arreglo
+    
     } catch (err) {
       console.error('Error en la consulta getTopThreeBestSellers:', err);
       throw err;

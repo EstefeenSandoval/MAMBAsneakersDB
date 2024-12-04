@@ -54,7 +54,7 @@ class Provider {
 
   static async getTopMoreProductsSupplied() { // Top 5 proveedores
     try {
-      const [rows] = await db.query(`
+      /*const [rows] = await db.query(`
         SELECT 
             pr.Nombre_Prov AS Proveedor, 
             COUNT(DISTINCT fp.ProductoID) AS ProductosSuministrados
@@ -70,7 +70,10 @@ class Provider {
             ProductosSuministrados DESC
         LIMIT 3;
     `);
-    return rows; 
+    return rows; */
+     // Llama al procedimiento almacenado
+     const [rows] = await db.query('CALL TopMoreProductsSupplied()');
+     return rows[0]; // El resultado estará en la primera posición del arreglo
     } catch (err) {
       console.error('Error en la consulta getTopMoreProductsSupplied:', err);
       throw err;
