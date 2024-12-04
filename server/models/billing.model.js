@@ -45,13 +45,19 @@ class Billing {
 
             // Desestructurar valores de la factura
             const { Tipo, ProveedorID, ClienteRFC } = billing;
+            
+            //ID FACTURA
+            const [r] = await connection.query('SELECT MAX(Folio_Factura) AS lastId FROM factura');
+            const ID_FACTURA = (r[0].lastId || 0) + 1; 
             // Insertar la factura con los valores calculados
-            await connection.query(`
-                INSERT INTO factura 
-                (Fecha_Creada, Subtotal, Impuesto, Total, Tipo, EnvioID, ProveedorID, ClienteRFC)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            `, [Fecha_Creada, subtotal, impuesto, total, Tipo, ID_Envio, ProveedorID, ClienteRFC]);
 
+             await connection.query(`
+                INSERT INTO factura 
+                (Folio_Factura, Fecha_Creada, Subtotal, Impuesto, Total, Tipo, EnvioID, ProveedorID, ClienteRFC)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `, [ID_FACTURA, Fecha_Creada, subtotal, impuesto, total, Tipo, ID_Envio, ProveedorID, ClienteRFC]); 
+
+         
             // 3. Insertar productos relacionados
             const [folio] = await connection.query('SELECT MAX(Folio_Factura) AS lastFolio FROM factura');
             const Folio_Factura = folio[0].lastFolio;
@@ -63,15 +69,17 @@ class Billing {
                 `, [Folio_Factura, ProductoID, Cantidad]);
             }
 
+
+            //TRIGGER
             // 4. Decrementar la cantidad de productos en inventario
-            for (const product of products) {
+            /* for (const product of products) {
                 const { ProductoID, Cantidad } = product;
                 await connection.query(`
                     UPDATE producto
                     SET Cantidad_Prod = Cantidad_Prod - ?
                     WHERE ID_Prod = ?
                 `, [Cantidad, ProductoID]);
-            }
+            } */
 
             await connection.commit(); // Confirmar la transacción
             return { folio: Folio_Factura, envioId: ID_Envio, message: 'Factura, productos y envío creados con éxito' };
