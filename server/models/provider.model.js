@@ -3,7 +3,35 @@ const db = require('../conexion'); // Asegúrate de que esté correctamente impo
 class Provider {
   static async getAll() { // Obtiene todos los proveedores
     try {
-      const [rows] = await db.query('SELECT * FROM proveedor');
+      const [rows] = await db.query(`
+        
+                -- Proveedores que han suministrado más de 10 productos en cualquier factura
+        SELECT DISTINCT 
+            pr.Nombre_Prov AS Proveedor
+        FROM 
+            proveedor pr
+        JOIN 
+            factura f ON pr.ID_Prov = f.ProveedorID
+        JOIN 
+            factura_producto fp ON f.Folio_Factura = fp.FacturaFolio
+        GROUP BY 
+            pr.ID_Prov
+        HAVING 
+            COUNT(fp.ProductoID) > 10
+
+        INTERSECT
+
+        -- Proveedores de la región "Centro"
+        SELECT 
+            pr.Nombre_Prov AS Proveedor
+        FROM 
+            proveedor pr
+        JOIN 
+            localidad l ON pr.LocalidadID = l.ID_Localidad
+        WHERE 
+            l.Nombre_Localidad = 'Centro';
+        
+        `);
       return rows; 
     } catch (err) {
       console.error('Error en la consulta getAll:', err);
